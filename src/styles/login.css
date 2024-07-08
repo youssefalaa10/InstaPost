@@ -25,7 +25,8 @@ body {
     overflow: hidden;
 }
 
-.login-form, .login-welcome {
+.login-form,
+.login-welcome {
     width: 50%;
     padding: 40px;
     box-sizing: border-box;
@@ -117,9 +118,11 @@ body {
 .login-welcome p {
     text-align: center;
 }
-.remember{
+
+.remember {
     font-size: 14px;
 }
+
 .tabs {
     display: flex;
     justify-content: center;
