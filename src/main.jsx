@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFounded from "./components/NotFounded.jsx";
 import LoginPage from "./pages/login.jsx";
 import RegisterPage from "./pages/Register.jsx";
+import SocialPost from "./components/SocialPost.jsx";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path: "/social",
+    element: <SocialPost />,
   },
   {
     path: "*",

@@ -38,7 +38,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="container">
+    <div className="contain mx-auto">
       <div className="login-container">
         <div className="login-form">
           {isLogin ? (
