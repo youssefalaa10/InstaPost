@@ -9,7 +9,7 @@ const SocialPost = ({
   postTime,
 }) => {
   return (
-    <div className="container mx-auto p-4 border rounded-lg shadow-lg">
+    <div className="p-4 border rounded-lg shadow-lg">
       <div className="flex">
         {/* Image Div */}
         <div className="w-2/5">
@@ -38,7 +38,8 @@ const SocialPost = ({
               </span>
             </div>
             <span className="text-gray-500 text-sm">
-              {/* {postTime} */}4 mins ago
+              {postTime}
+              {/* 4 mins ago */}
             </span>
           </div>
           <h2 className="text-xl font-bold mb-2">
@@ -50,7 +51,7 @@ const SocialPost = ({
             {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. */}
           </p>
           <div className="flex gap-4">
-            <button className="flex items-center gap-2 p-2 text-white bg-[#8D66FC] rounded-lg">
+            <button className="flex items-center gap-2 p-2 text-white bg-primary rounded-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"

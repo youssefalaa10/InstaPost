@@ -7,6 +7,8 @@ import NotFounded from "./components/NotFounded.jsx";
 import LoginPage from "./pages/login.jsx";
 import RegisterPage from "./pages/Register.jsx";
 import SocialPost from "./components/SocialPost.jsx";
+// primeicons
+import "primeicons/primeicons.css";
 
 const router = createBrowserRouter([
   {

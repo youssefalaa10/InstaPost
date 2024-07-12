@@ -3,8 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
 
-import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
+
 import RegisterPage from "./Register";
+import { supabase } from "../api/client";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { data, error } = await SupabaseAuthClient.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.SignIn({
       email: form.email,
       password: form.password,
     });

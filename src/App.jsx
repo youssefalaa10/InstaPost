@@ -1,7 +1,6 @@
 import { useState } from "react";
 
-import Post from "./pages/PostPage";
-// import Navbar from "./components/Navbar";
+import HomePage from "./pages/Home";
 
 function App() {
   const postData = [
@@ -46,8 +45,7 @@ function App() {
 
   return (
     <>
-      {/* <Navbar /> */}
-      <Post posts={posts} />
+      <HomePage posts={posts} />
     </>
   );
 }
