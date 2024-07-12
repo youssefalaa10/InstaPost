@@ -1,7 +1,7 @@
 import AddPostBtn from "../components/AddPostBtn";
-import Header from "../components/Header";
+import Header from "../components/Home/Header";
 import SocialPost from "../components/SocialPost";
-import SideBar from "../components/SideBar";
+import SideBar from "../components/Home/SideBar";
 
 import "../styles/home-layout.css";
 

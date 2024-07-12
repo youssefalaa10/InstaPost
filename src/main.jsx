@@ -8,7 +8,8 @@ import LoginPage from "./pages/login.jsx";
 import RegisterPage from "./pages/Register.jsx";
 import SocialPost from "./components/SocialPost.jsx";
 // primeicons
-import "primeicons/primeicons.css";
+
+import Chats from "./pages/Chats.jsx";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: "/social",
     element: <SocialPost />,
+  },
+  {
+    path: "/chat",
+    element: <Chats />,
   },
   {
     path: "*",

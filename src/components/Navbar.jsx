@@ -1,6 +1,6 @@
-import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { supabase } from "../api/client";
 
 
 function Navbar() {
@@ -10,7 +10,7 @@ function Navbar() {
     const checkUser = async () => {
       const {
         data: { session },
-      } = await SupabaseAuthClient.auth.getSession();
+      } = await supabase.auth.getSession();
       if (session) {
         setIsLoggedIn(true);
       }
