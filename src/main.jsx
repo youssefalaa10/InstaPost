@@ -10,6 +10,7 @@ import SocialPost from "./components/SocialPost.jsx";
 // primeicons
 
 import Chats from "./pages/Chats.jsx";
+import Profile from "./components/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: "/chat",
     element: <Chats />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
   },
   {
     path: "*",

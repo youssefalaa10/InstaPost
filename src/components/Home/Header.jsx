@@ -1,29 +1,31 @@
+import "primeicons/primeicons.css"; // تأكد من استيراد CSS الخاص بـ PrimeIcons
+import { NavLink } from "react-router-dom";
+
 function Header() {
   return (
-    <header className="header px-4 bg-green-200 flex justify-end items-center gap-2">
-      <div className="relative w-fit">
-        <input
-          type="text"
-          placeholder="Search..."
-          // value={searched}
-          // onChange={handleChange}
-          className="py-2 px-4 border border-gray-300 rounded-lg bg-white focus:outline-none focus:border-primary"
-        />
-        <div className="absolute top-1/2 right-4 -translate-y-1/2 w-5 h-5 text-gray-700">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="search-icon"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
+    <header className="header bg-white shadow-sm">
+      <div className="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+        {/* Logo container */}
+        <div className="flex-shrink-0">
+          <i className="pi pi-instagram text-2xl text-blue-500"></i>
+        </div>
+
+        {/* Navigation links container */}
+        <div className="flex items-center space-x-4">
+          <NavLink to="/chat" className="text-gray-600 hover:text-blue-500">
+            <i className="pi pi-envelope text-xl"></i>
+          </NavLink>
+         
+          <a href="#" className="text-gray-600 hover:text-blue-500">
+            <i className="pi pi-bell text-xl"></i>
+          </a>
+          <NavLink to="/profile">
+          <img
+            src="https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1720742400&semt=ais_user"
+            alt="Profile avatar"
+            className="h-8 w-8 rounded-full border border-gray-300 ml-4"
+          />
+          </NavLink>
         </div>
       </div>
     </header>
