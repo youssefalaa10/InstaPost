@@ -6,8 +6,8 @@ const SocialPost = ({
   description,
   posterImage,
   posterName,
-  postTime,
-  likes,
+  created_at,
+  is_liked,
 }) => {
   return (
     <div className="p-4 border rounded-lg shadow-lg bg-white mb-4">
@@ -20,12 +20,12 @@ const SocialPost = ({
         <div className="flex flex-col">
           <span className="font-semibold">{posterName}</span>
          
-          <span className="text-gray-500 text-sm">{postTime}</span>
+          <span className="text-gray-500 text-sm">{created_at}</span>
         </div>
           <i className="pi pi-ellipsis-v text-gray-500 ml-auto justify-end"></i>
       </div>
       <span className="text-blue-400 text-sm">
-            {/* {postTime} */}
+            {/* {created_at} */}
             # football
           </span>
       <h2 className="text-xl font-bold mb-2">{title}</h2>
@@ -39,7 +39,7 @@ const SocialPost = ({
       <div className="flex items-center justify-between">
         <button className="flex items-center text-gray-500">
           <i className="pi pi-heart"></i>
-          {likes} Likes
+          {is_liked} Likes
         </button>
         <button className="flex items-center text-gray-500">
           <i className="pi pi-comment"></i>
