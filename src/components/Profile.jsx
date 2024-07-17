@@ -1,3 +1,4 @@
+import Layout from "../layouts/Layout";
 
 
 const Profile = ({
@@ -46,6 +47,7 @@ const Profile = ({
   };
 
   return (
+    <Layout>
     <div className="w-4/5 mx-auto bg-gray-100">
       <div className="relative">
         <img
@@ -161,6 +163,7 @@ const Profile = ({
         </div>
       </div>
     </div>
+    </Layout>
   );
 };
 

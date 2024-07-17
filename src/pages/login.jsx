@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
-
-
 import RegisterPage from "./Register";
 import { supabase } from "../api/client";
 
@@ -34,8 +32,10 @@ function LoginPage() {
       return;
     }
 
-    localStorage.setItem("token", data.session.access_token);
-    navigate("/");
+    if (data?.session?.access_token) {
+      localStorage.setItem("token", data.session.access_token);
+      navigate("/");
+    }
   };
 
   return (
@@ -65,7 +65,7 @@ function LoginPage() {
               />
               <div className="options">
                 <div className="flex flex-start items-center gap-2">
-                  <input type="checkbox" className="mt-3" />
+                  <input type="checkbox" className="mt-3" id="remember" />
                   <label
                     htmlFor="remember"
                     className="remember text-nowrap text-sm text-gray-500"
@@ -89,9 +89,7 @@ function LoginPage() {
         </div>
         <div className="login-welcome">
           <h2>Welcome Back!</h2>
-          <p>
-            To keep connected with us, please login with your personal info.
-          </p>
+          <p>To keep connected with us, please login with your personal info.</p>
         </div>
       </div>
     </div>
@@ -99,6 +97,7 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
 
 // function LoginPage() {
 //   const navigate = useNavigate();

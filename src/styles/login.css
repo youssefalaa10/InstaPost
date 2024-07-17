@@ -160,3 +160,17 @@ body {
     height: 2px;
     background-color: #667eea;
 }
+.google-signin-button {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .google-signin-button:hover {
+    background-color: #357AE8;
+  }
+  

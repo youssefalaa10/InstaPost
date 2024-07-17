@@ -1,13 +1,16 @@
+import { FaRegComment } from "react-icons/fa";
+import { GoHeart } from "react-icons/go";
 
 
 const SocialPost = ({
   postImage,
-  title,
+  // title,
   description,
   posterImage,
   posterName,
   created_at,
   is_liked,
+  hash_tag,
 }) => {
   return (
     <div className="p-4 border rounded-lg shadow-lg bg-white mb-4">
@@ -25,10 +28,10 @@ const SocialPost = ({
           <i className="pi pi-ellipsis-v text-gray-500 ml-auto justify-end"></i>
       </div>
       <span className="text-blue-400 text-sm">
-            {/* {created_at} */}
-            # football
+            #{hash_tag}
+            {/* # football */}
           </span>
-      <h2 className="text-xl font-bold mb-2">{title}</h2>
+      {/* <h2 className="text-xl font-bold mb-2">{title}</h2> */}
       <p className="text-gray-700 mb-4">{description}</p>
       <img
         src={postImage}
@@ -36,13 +39,14 @@ const SocialPost = ({
         className="w-full h-60 object-cover rounded-lg mb-4"
       />
     
-      <div className="flex items-center justify-between">
-        <button className="flex items-center text-gray-500">
-          <i className="pi pi-heart"></i>
+      <div className="flex items-center justify-between ">
+        <button className="flex items-center text-gray-500 gap-2 ">
+        <GoHeart className="hover: text-red-500 "/>
+        
           {is_liked} Likes
         </button>
-        <button className="flex items-center text-gray-500">
-          <i className="pi pi-comment"></i>
+        <button className="flex items-center text-gray-500 gap-2">
+        <FaRegComment />
           Comment
         </button>
        
