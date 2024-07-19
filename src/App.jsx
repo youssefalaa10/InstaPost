@@ -8,6 +8,7 @@ import LoginPage from "./pages/login";
 function App() {
 
   const user = useUser();
+  console.log(`dada${user}`);
 
   const [posts, setPosts] = useState([]);
   useEffect(() => {

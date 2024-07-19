@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { supabase } from "../api/client";
+import { supabase } from "../api/client.js";
 function AddPost() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [postImage, setPostImage] = useState(null);
@@ -74,9 +74,7 @@ function AddPost() {
             onClick={handleInputClick}
           />
         </div>
-        <div className="flex justify-around">
-         
-        </div>
+        <div className="flex justify-around"></div>
       </div>
 
       {isPopupVisible && (

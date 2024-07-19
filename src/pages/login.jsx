@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
 import RegisterPage from "./Register";
-import { supabase } from "../api/client";
+import { supabase } from "../api/client.js";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -89,7 +89,9 @@ function LoginPage() {
         </div>
         <div className="login-welcome">
           <h2>Welcome Back!</h2>
-          <p>To keep connected with us, please login with your personal info.</p>
+          <p>
+            To keep connected with us, please login with your personal info.
+          </p>
         </div>
       </div>
     </div>
@@ -97,7 +99,6 @@ function LoginPage() {
 }
 
 export default LoginPage;
-
 
 // function LoginPage() {
 //   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
-import { supabase } from "../api/client";
+import { supabase } from "../api/client.js";
 
 function RegisterPage({ onLoginClick }) {
   const navigate = useNavigate();
