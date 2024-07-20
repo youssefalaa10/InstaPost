@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 # src/api/index.js
 # src/api/client.js
-
+.firebase.js

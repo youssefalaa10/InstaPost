@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { supabase } from "../api/client.js";
+
 function AddPost() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [postImage, setPostImage] = useState(null);
@@ -30,33 +30,9 @@ function AddPost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Upload image to Supabase Storage
-    const imagePath = `public/${Date.now()}_${postImage.name}`;
-    const { data, error } = await supabase.storage
-      .from("posts")
-      .upload(imagePath, postImage);
 
-    if (error) {
-      console.error("Error uploading image:", error);
-      return;
-    }
 
-    // Get the file metadata
-    const fileData = data.Key; // This will give you the path of the uploaded file
-
-    // Save post data to Supabase table
-    const { data: postData, error: postError } = await supabase
-      .from("posts")
-      .insert([{ title, description, postImage: fileData }]);
-
-    if (postError) {
-      console.error("Error saving post:", postError);
-      return;
-    }
-
-    console.log("Post saved:", postData);
-    setIsPopupVisible(false);
-  };
+  }
 
   return (
     <div>

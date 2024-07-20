@@ -3,7 +3,7 @@ import logo from "../../assets/images/logo2.png";
 import { HiOutlineMail } from "react-icons/hi";
 import { FiBell } from "react-icons/fi";
 import { useState } from "react"; 
-import { supabase } from "../../api/client";
+
 
 
 
@@ -17,8 +17,7 @@ function Header() {
 
   // Function to handle sign out action (replace with your own sign out logic)
   const handleSignOut = () => {
-    // Add your sign out logic here
-    supabase.auth.signOut();
+
     console.log("Signing out...");
   };
 

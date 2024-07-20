@@ -173,4 +173,20 @@ body {
   .google-signin-button:hover {
     background-color: #357AE8;
   }
-  
+  .image-profile{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .image-profile label{
+    cursor: pointer;
+  }
+  .image-profile input{
+    display: none;
+  }
+  .profile-img{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
