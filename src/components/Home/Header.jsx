@@ -4,6 +4,8 @@ import { HiOutlineMail } from "react-icons/hi";
 import { FiBell } from "react-icons/fi";
 import { useState } from "react"; 
 
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 
 
@@ -20,6 +22,8 @@ function Header() {
 
     console.log("Signing out...");
   };
+
+  const { currentUser } = useContext(AuthContext);
 
   return (
     <header className="header bg-white shadow-sm">
@@ -47,7 +51,7 @@ function Header() {
               aria-label="Profile options"
             >
               <img
-                src="https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1720742400&semt=ais_user"
+                src= {currentUser.photoURL || "https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1720742400&semt=ais_user"}
                 alt="Profile avatar"
                 className="h-8 w-8 rounded-full border border-gray-300"
               />

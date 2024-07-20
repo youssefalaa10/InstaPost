@@ -1,5 +1,6 @@
 import { useState } from "react";
-
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 
 function AddPost() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -29,30 +30,30 @@ function AddPost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-
-
-  }
-
+  };
+  const { currentUser } = useContext(AuthContext);
+  console.log(currentUser);
   return (
     <div>
-      <div className="w-full mt-1 mb-4 p-4 border rounded-lg shadow-sm bg-white">
-        <div className="flex items-center mb-4">
-          <img
-            className="w-10 h-10 rounded-full"
-            src="https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1720742400&semt=ais_user"
-            alt="User profile"
-          />
-          <input
-            type="text"
-            placeholder="What's on your mind ..."
-            className="ml-4 w-full p-2 rounded-full border bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onClick={handleInputClick}
-          />
+      {currentUser && (
+        <div className="w-full mt-1 mb-4 p-4 border rounded-lg shadow-sm bg-white">
+          <div className="flex items-center mb-4">
+            <img
+              className="w-10 h-10 rounded-full"
+              src="https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1720742400&semt=ais_user"
+              alt="User profile"
+            />
+            <input
+              type="text"
+              placeholder="What's on your mind ..."
+              className="ml-4 w-full p-2 rounded-full border bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={handleInputClick}
+            />
+          </div>
+          <div className="flex justify-around"></div>
         </div>
-        <div className="flex justify-around"></div>
-      </div>
-
+      )}
+      
       {isPopupVisible && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">

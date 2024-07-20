@@ -3,10 +3,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/login.css";
 import RegisterPage from "./Register";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase";
 
 
 function LoginPage() {
   const navigate = useNavigate();
+  const [error,setError] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({
     email: "",
@@ -23,8 +26,16 @@ function LoginPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
   
+    const email = event.target[0].value;
+    const password = event.target[1].value;
 
-    navigate("/");
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate("/");
+    } catch (error) {
+      setError(true);
+    }
+
   };
 
   return (
@@ -36,7 +47,7 @@ function LoginPage() {
               <h2>Login</h2>
               <label htmlFor="email">Email</label>
               <input
-                type="text"
+                type="email"
                 id="email"
                 placeholder="Email"
                 name="email"
@@ -50,6 +61,7 @@ function LoginPage() {
                 name="password"
                 placeholder="Password"
                 value={form.password}
+                minLength={6}
                 onChange={handleChange}
               />
               <div className="options">
@@ -71,6 +83,7 @@ function LoginPage() {
                   Sign up
                 </Link>
               </p>
+              {error && <p>Somthing went wrong</p>}
             </form>
           ) : (
             <RegisterPage onLoginClick={() => setIsLogin(true)} />

@@ -1,5 +1,7 @@
 import { FaRegComment } from "react-icons/fa";
 import { GoHeart } from "react-icons/go";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 
 
 const SocialPost = ({
@@ -12,11 +14,13 @@ const SocialPost = ({
   is_liked,
   hash_tag,
 }) => {
+  const { currentUser } = useContext(AuthContext);
+
   return (
     <div className="p-4 border rounded-lg shadow-lg bg-white mb-4">
       <div className="flex items-center mb-4">
         <img
-          src={posterImage}
+          src={currentUser.photoURL || posterImage}
           alt="avatar"
           className="w-10 h-10 rounded-full mr-2"
         />

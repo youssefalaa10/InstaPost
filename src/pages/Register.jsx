@@ -35,7 +35,7 @@ function RegisterPage({ onLoginClick }) {
         email,
         password
       );
-      const storageRef = ref(storage, userName);
+      const storageRef = ref(storage, "usersImages/" + userName);
 
       const uploadTask = uploadBytesResumable(storageRef, img);
 
@@ -71,6 +71,7 @@ function RegisterPage({ onLoginClick }) {
     } catch (error) {
       setError(true);
     }
+    navigate("/login");
   }
 
   return (
@@ -97,6 +98,7 @@ function RegisterPage({ onLoginClick }) {
                   name="image"
                   id="profile-img"
                   onChange={(e) => setImg(e.target.files[0])}
+                  accept=".png,.jpeg,.jpg"
                 />
               </div>
             </div>
@@ -124,6 +126,7 @@ function RegisterPage({ onLoginClick }) {
               id="password"
               placeholder="Password"
               name="password"
+              minLength={6}
               value={form.password}
               onChange={handleChange}
             />

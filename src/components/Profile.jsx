@@ -1,5 +1,6 @@
 import Layout from "../layouts/Layout";
-
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 
 const Profile = ({
   name,
@@ -45,6 +46,7 @@ const Profile = ({
     },
    
   };
+  const { currentUser } = useContext(AuthContext);
 
   return (
     <Layout>
@@ -65,7 +67,7 @@ const Profile = ({
       </div>
       <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md mt-4">
         <div className="text-center mt-16">
-          <h1 className="text-2xl font-bold">{profileData.name}</h1>
+          <h1 className="text-2xl font-bold">{currentUser.displayName ||profileData.name}</h1>
           <p className="text-gray-600">{profileData.bio}</p>
           <div className="flex justify-center space-x-2 mt-2">
             {profileData.socialLinks.map((link, index) => (
