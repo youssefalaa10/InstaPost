@@ -61,7 +61,7 @@ function Header() {
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1">
                 <NavLink
                   to="/profile"
-                  className="block px-4 py-2 text-gray-800 hover:bg-gray-200 text-blue-600"
+                  className="block px-4 py-2 hover:bg-gray-200 text-blue-600"
                 >
                   Profile
                 </NavLink>

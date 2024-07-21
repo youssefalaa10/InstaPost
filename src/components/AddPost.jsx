@@ -5,7 +5,7 @@ import { useContext } from "react";
 function AddPost() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [postImage, setPostImage] = useState(null);
-  const [title, setTitle] = useState("");
+  const [hasTag, sethasTag] = useState("");
   const [description, setDescription] = useState("");
 
   const handleInputClick = () => {
@@ -20,8 +20,8 @@ function AddPost() {
     setPostImage(e.target.files[0]);
   };
 
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
+  const handlehasTagChange = (e) => {
+    sethasTag(e.target.value);
   };
 
   const handleDescriptionChange = (e) => {
@@ -31,6 +31,10 @@ function AddPost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
   };
+
+  const handleKey = (e) =>{
+    e.code === "Enter" && handlePost();
+  }
   const { currentUser } = useContext(AuthContext);
   console.log(currentUser);
   return (
@@ -68,13 +72,13 @@ function AddPost() {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Title:</label>
+                <label className="block text-gray-700">hasTag:</label>
                 <input
                   type="text"
                   className="w-full p-2 border rounded"
-                  placeholder="Enter title"
-                  value={title}
-                  onChange={handleTitleChange}
+                  placeholder="Enter hasTag"
+                  value={hasTag}
+                  onChange={handlehasTagChange}
                 />
               </div>
               <div className="mb-4">
@@ -84,6 +88,7 @@ function AddPost() {
                   placeholder="Enter description"
                   value={description}
                   onChange={handleDescriptionChange}
+                  onKeyDown={handleKey()}
                 ></textarea>
               </div>
               <div className="flex justify-end">

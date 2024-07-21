@@ -6,10 +6,9 @@ import RegisterPage from "./Register";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 
-
 function LoginPage() {
   const navigate = useNavigate();
-  const [error,setError] = useState(false);
+  const [error, setError] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState({
     email: "",
@@ -25,7 +24,7 @@ function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     const email = event.target[0].value;
     const password = event.target[1].value;
 
@@ -35,12 +34,17 @@ function LoginPage() {
     } catch (error) {
       setError(true);
     }
-
   };
 
   return (
     <div className="contain mx-auto">
       <div className="login-container">
+        <div className="login-welcome">
+          <h2>Welcome Back!</h2>
+          <p>
+            To keep connected with us, please login with your personal info.
+          </p>
+        </div>
         <div className="login-form">
           {isLogin ? (
             <form onSubmit={handleSubmit}>
@@ -89,16 +93,9 @@ function LoginPage() {
             <RegisterPage onLoginClick={() => setIsLogin(true)} />
           )}
         </div>
-        <div className="login-welcome">
-          <h2>Welcome Back!</h2>
-          <p>
-            To keep connected with us, please login with your personal info.
-          </p>
-        </div>
       </div>
     </div>
   );
 }
 
 export default LoginPage;
-
