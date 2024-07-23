@@ -1,26 +1,29 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo2.png";
 import { HiOutlineMail } from "react-icons/hi";
 import { FiBell } from "react-icons/fi";
-import { useState } from "react"; 
-
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-
-
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
 
 function Header() {
-  const [showDropdown, setShowDropdown] = useState(false); // State to manage dropdown visibility
+  const [showDropdown, setShowDropdown] = useState(false); 
+  const navigate = useNavigate(); 
 
-  // Function to toggle dropdown visibility
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
 
-  // Function to handle sign out action (replace with your own sign out logic)
   const handleSignOut = () => {
-
-    console.log("Signing out...");
+    signOut(auth)
+      .then(() => {
+        console.log("Signing out...");
+        navigate("/login", { replace: true }); 
+      })
+      .catch((error) => {
+        console.error("Sign out error", error);
+      });
   };
 
   const { currentUser } = useContext(AuthContext);
@@ -40,9 +43,9 @@ function Header() {
           <NavLink to="/chat" className="text-gray-600 hover:text-blue-500">
             <HiOutlineMail className="text-2xl" />
           </NavLink>
-          <a href="#" className="text-gray-600 hover:text-blue-500">
+          <NavLink to="/notifications" className="text-gray-600 hover:text-blue-500">
             <FiBell className="text-2xl" />
-          </a>
+          </NavLink>
           {/* Profile dropdown */}
           <div className="relative mt-1">
             <button
@@ -51,7 +54,10 @@ function Header() {
               aria-label="Profile options"
             >
               <img
-                src= {currentUser.photoURL || "https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1720742400&semt=ais_user"}
+                src={
+                  currentUser?.photoURL ||
+                  "https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1720742400&semt=ais_user"
+                }
                 alt="Profile avatar"
                 className="h-8 w-8 rounded-full border border-gray-300"
               />
@@ -60,7 +66,7 @@ function Header() {
             {showDropdown && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1">
                 <NavLink
-                  to="/profile"
+                  to={`/profile/${currentUser?.displayName}`}
                   className="block px-4 py-2 hover:bg-gray-200 text-blue-600"
                 >
                   Profile

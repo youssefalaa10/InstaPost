@@ -2,19 +2,21 @@ import Layout from "../layouts/Layout";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 
-const Profile = ({
-  name,
-  bio,
-  avatar,
-  backgroundImage,
-  socialLinks,
-  stats,
-  about,
-  expertise,
-  languages,
-  karma,
-  badges,
-}) => {
+const Profile = (
+  // {
+  // name,
+  // bio,
+  // avatar,
+  // backgroundImage,
+  // socialLinks,
+  // stats,
+  // about,
+  // expertise,
+  // languages,
+  // karma,
+  // badges,
+// }
+) => {
   const profileData = {
     name: "Youssef Alaa",
     bio: "Follow for daily design tips, memes, Flutter tips, 🔥 developer / co-founder ...",

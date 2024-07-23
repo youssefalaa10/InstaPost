@@ -45,6 +45,7 @@ function RegisterPage({ onLoginClick }) {
         (error) => {
           // Handle unsuccessful uploads
           setError(true);
+          console.error("Upload failed", error);
         },
         async () => {
           try {
