@@ -12,10 +12,11 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
-// import TimeAgo from "react-timeago";
+import EditPost from "./EditPost";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../styles/comment.css";
+
 const SocialPost = ({ post }) => {
   const { currentUser } = useContext(AuthContext);
   const [likes, setLikes] = useState([]);
@@ -25,6 +26,8 @@ const SocialPost = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false); 
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const unSub = onSnapshot(
@@ -83,10 +86,21 @@ const SocialPost = ({ post }) => {
     setInput("");
   };
 
+  const toggleDropdown = () => {
+    setShowDropdown((prev) => !prev);
+  };
+
+  const startEditing = () => {
+    setShowDropdown(false);
+    setIsEditing(true);
+  };
+
   return (
     <div className="p-4 border rounded-lg shadow-lg bg-white mb-4">
       {loading ? (
         <Skeleton height={100} />
+      ) : isEditing ? (
+        <EditPost post={post} onClose={() => setIsEditing(false)} />
       ) : (
         <>
           <div className="flex items-center mb-4">
@@ -101,7 +115,19 @@ const SocialPost = ({ post }) => {
                 {new Date(post.data?.timestamp?.toDate()).toLocaleString()}
               </span>
             </div>
-            <FaEllipsisV className="text-gray-500 ml-auto justify-end" />
+            <button className="ml-auto" onClick={toggleDropdown}>
+              <FaEllipsisV className="text-gray-500 ml-auto justify-end" />
+            </button>
+            {showDropdown && (
+              <div className="absolute right-80 mt-32 w-48 bg-white rounded-lg shadow-lg py-1 z-20">
+                <button className="block px-4 py-2 hover:bg-gray-200 w-full text-left text-blue-600" onClick={startEditing}>
+                  Edit
+                </button>
+                <button className="block px-4 py-2 text-red-500 hover:bg-gray-200 w-full text-left">
+                  Delete
+                </button>
+              </div>
+            )}
           </div>
           <span className="text-blue-400 text-sm inline-block">
             #{post.data.hasTag}
@@ -128,10 +154,10 @@ const SocialPost = ({ post }) => {
             </button>
             <button
               className="flex items-center text-gray-500 gap-2"
-              onClick={() => setCommentBoxVisible(!commentBoxVisible)}
+              onClick={() => setCommentBoxVisible((prev) => !prev)}
             >
               <FaRegComment />
-              <span onClick={() => setCommentOpen(!commentOpen)}>
+              <span onClick={() => setCommentOpen((prev) => !prev)}>
                 {comments.length}
               </span>
             </button>
@@ -154,12 +180,12 @@ const SocialPost = ({ post }) => {
           </button>
         </form>
       )}
-      {commentOpen > 0 && (
+      {commentOpen && (
         <div className="comment">
           {comments
             .sort((a, b) => b.data.timestamp - a.data.timestamp)
             .map((c) => (
-              <div>
+              <div key={c.id}>
                 <div className="commentWrapper">
                   <img
                     className="commentProfileImg"
