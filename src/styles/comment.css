@@ -1,0 +1,74 @@
+.commentBox{
+    display: flex;
+
+    .commentInput{
+        display: flex;
+        flex: 1;
+        width: 75%;
+        background: transparent;
+        color: black;
+        border: 1px solid #011631;
+        padding: 10px 5px 0px 5px;
+        margin: 0px 0px 20px 20px;
+        outline: none;
+    }
+
+    .commentPost{
+        display: flex;
+        padding: 10px 25px;
+        background-color: #011631;
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+        margin: 0px 20px 20px 0px;
+        border: none;
+        cursor: pointer;
+
+        &:disabled{
+            cursor: not-allowed;
+            background-color: #011631a4;
+        }
+    }
+}
+.comment{
+    width: 100%;
+    max-height: 250px;
+    overflow-y: scroll;
+
+    .commentWrapper{
+        display: flex;
+        align-items: center;
+        border-top: 1px dashed #011631;
+        width: 90%;
+        margin: auto;
+
+        .commentProfileImg{
+            display: flex;
+            margin: 20px 7px 20px 10px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #011631;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .commentInfo{
+            padding: 20px 0;
+            max-width: 80%;
+
+            .commentUsername{
+                font-weight: 600;
+                cursor: pointer;
+            }
+
+            .commentText{
+                background-color: #011631;
+                color: white;
+                padding: 10px;
+                margin-top: 3px;
+                border-radius: 30px 30px 30px 30px;
+            }
+        }
+    }
+}
