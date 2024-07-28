@@ -1,14 +1,9 @@
-import { useState, useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { useState } from "react";
+
 import { v4 as uuid } from "uuid";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../firebase";
-import {
-  updateDoc,
-  deleteDoc,
-  doc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { updateDoc, doc, serverTimestamp } from "firebase/firestore";
 import { FaImages } from "react-icons/fa6";
 import { ImCancelCircle } from "react-icons/im";
 
@@ -16,7 +11,6 @@ function EditPost({ post, onClose }) {
   const [hasTag, setHasTag] = useState(post.data.hasTag || "");
   const [description, setDescription] = useState(post.data.description || "");
   const [img, setImg] = useState(null);
-  const { currentUser } = useContext(AuthContext);
 
   const handleFileChange = (e) => setImg(e.target.files[0]);
   const handleHasTagChange = (e) => setHasTag(e.target.value);
@@ -55,16 +49,13 @@ function EditPost({ post, onClose }) {
     onClose();
   };
 
-  const handleDelete = async () => {
-    const postDocRef = doc(db, "posts", post.id);
-    await deleteDoc(postDocRef);
-    onClose();
-  };
-
   return (
     <form onSubmit={handleSubmit} className="p-4 border rounded-lg shadow-md">
       <div className="mb-4">
-        <label htmlFor="hasTag" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="hasTag"
+          className="block text-sm font-medium text-gray-700"
+        >
           Hashtag
         </label>
         <input
@@ -76,7 +67,10 @@ function EditPost({ post, onClose }) {
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700"
+        >
           Description
         </label>
         <textarea
@@ -88,7 +82,9 @@ function EditPost({ post, onClose }) {
         ></textarea>
       </div>
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Upload Image</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Upload Image
+        </label>
         <div className="flex items-center justify-center w-full">
           <label
             htmlFor="imageUpload"
@@ -103,7 +99,9 @@ function EditPost({ post, onClose }) {
             ) : (
               <>
                 <FaImages className="w-10 h-10 text-gray-400" />
-                <p className="text-sm text-gray-500">Click to upload or drag and drop</p>
+                <p className="text-sm text-gray-500">
+                  Click to upload or drag and drop
+                </p>
               </>
             )}
           </label>
@@ -139,15 +137,6 @@ function EditPost({ post, onClose }) {
         >
           Save
         </button>
-        {post.data.createdBy === currentUser.uid && (
-          <button
-            type="button"
-            onClick={handleDelete}
-            className="ml-2 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          >
-            Delete
-          </button>
-        )}
       </div>
     </form>
   );

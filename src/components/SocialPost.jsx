@@ -26,8 +26,9 @@ const SocialPost = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false); 
+  const [showDropdown, setShowDropdown] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const unSub = onSnapshot(
@@ -95,6 +96,17 @@ const SocialPost = ({ post }) => {
     setIsEditing(true);
   };
 
+  const handleDelete = async (postId) => {
+    try {
+      await deleteDoc(doc(db, "posts", postId));
+      setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+      // onClose();
+    } catch (e) {
+      console.log(e);
+      console.log(posts);
+    }
+  };
+
   return (
     <div className="p-4 border rounded-lg shadow-lg bg-white mb-4">
       {loading ? (
@@ -105,7 +117,7 @@ const SocialPost = ({ post }) => {
         <>
           <div className="flex items-center mb-4">
             <img
-              src={currentUser.photoURL || post.data.photoURL}
+              src={post.data.photoURL}
               alt="avatar"
               className="w-10 h-10 rounded-full mr-2"
             />
@@ -115,17 +127,28 @@ const SocialPost = ({ post }) => {
                 {new Date(post.data?.timestamp?.toDate()).toLocaleString()}
               </span>
             </div>
+            {currentUser.uid == post.data.uid && (
             <button className="ml-auto" onClick={toggleDropdown}>
               <FaEllipsisV className="text-gray-500 ml-auto justify-end" />
             </button>
-            {showDropdown && (
+             )}
+            {currentUser.uid == post.data.uid && showDropdown && (
               <div className="absolute right-80 mt-32 w-48 bg-white rounded-lg shadow-lg py-1 z-20">
-                <button className="block px-4 py-2 hover:bg-gray-200 w-full text-left text-blue-600" onClick={startEditing}>
+                <button
+                  className="block px-4 py-2 hover:bg-gray-200 w-full text-left text-blue-600"
+                  onClick={startEditing}
+                >
                   Edit
                 </button>
-                <button className="block px-4 py-2 text-red-500 hover:bg-gray-200 w-full text-left">
-                  Delete
-                </button>
+                {currentUser.uid == post.data.uid && (
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(post.id)}
+                    className="block px-4 py-2 text-red-500 hover:bg-gray-200 w-full text-left"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             )}
           </div>
