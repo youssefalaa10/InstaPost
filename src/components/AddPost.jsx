@@ -108,20 +108,15 @@ function AddPost() {
 
       {isPopupVisible && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+          <div className="bg-white p-5 rounded-lg shadow-lg max-w-md w-full">
             <div className="flex justify-end">
-              <button
-                type="button"
-                className="mr-2 px-4 py-2 bg-gray-300 rounded"
-                onClick={handleClosePopup}
-              >
-                <ImCancelCircle />
+              <button type="button" onClick={handleClosePopup}>
+                <ImCancelCircle className="text-red-600 hover:text-red-800" />
               </button>
             </div>
             <h2 className="text-xl font-bold mb-4">Create Post</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
-                <label className="block text-gray-700">Hashtag:</label>
                 <input
                   type="text"
                   className="w-full p-2 border rounded"
@@ -131,7 +126,6 @@ function AddPost() {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-gray-700">Description:</label>
                 <textarea
                   className="w-full p-2 border rounded"
                   placeholder="Enter description"
@@ -141,38 +135,52 @@ function AddPost() {
                 ></textarea>
               </div>
               <div className="mb-4">
-                <label
-                  className="flex gap-2 items-center text-gray-700"
-                  htmlFor="imageFile"
-                >
-                  add Image <FaImages className="text-2xl" />
+                <label className="block text-sm font-medium text-gray-700">
+                  Upload Image
                 </label>
-                <input
-                  id="imageFile"
-                  type="file"
-                  accept=".png,.jpeg,.jpg"
-                  className="w-full p-2 border rounded hidden imageFile"
-                  onChange={handleFileChange}
-                />
-              </div>
-              {img && (
-                <div className="shareImgContainer ">
-                  <ImCancelCircle
-                    className="shareCancelImg"
-                    onClick={removeImage}
+                <div className="flex items-center justify-center w-full">
+                  <label
+                    htmlFor="imageFile"
+                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300"
+                  >
+                    {img ? (
+                      <img
+                        src={URL.createObjectURL(img)}
+                        alt="Selected"
+                        className="h-full w-full object-contain"
+                      />
+                    ) : (
+                      <>
+                        <FaImages className="w-10 h-10 text-gray-400" />
+                        <p className="text-sm text-gray-500">
+                          Click to upload or drag and drop
+                        </p>
+                      </>
+                    )}
+                  </label>
+                  <input
+                    id="imageFile"
+                    type="file"
+                    accept=".png,.jpeg,.jpg"
+                    className="hidden"
+                    onChange={handleFileChange}
                   />
-                  <img
-                    src={URL.createObjectURL(img)}
-                    alt=""
-                    className="shareImg "
-                  />
-                  
+                  {img && (
+                    <button
+                      type="button"
+                      className="mt-2 text-red-600 hover:text-red-800"
+                      onClick={removeImage}
+                    >
+                      <ImCancelCircle size={24} />
+                    </button>
+                  )}
                 </div>
-              )}
+              </div>
+
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
+                  className="px-4 py-2 bg-blue-500 text-white rounded w-full "
                 >
                   Post
                 </button>

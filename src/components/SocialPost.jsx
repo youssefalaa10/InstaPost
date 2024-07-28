@@ -157,11 +157,11 @@ const SocialPost = ({ post }) => {
           </span>
           <p className="text-gray-700 mb-4">{post.data.description}</p>
           {post.data.img && (
-            <img
-              src={post.data.img}
-              alt="post"
-              className="w-full h-60 object-cover rounded-lg mb-4"
-            />
+           <div
+           className="w-full h-60 bg-cover bg-center rounded-lg mb-4"
+           style={{ backgroundImage: `url(${post.data.img})` }}
+           alt="post"
+         />
           )}
           <div className="flex items-center justify-between">
             <button
