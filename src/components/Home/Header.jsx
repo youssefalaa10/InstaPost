@@ -8,8 +8,10 @@ import { AuthContext } from "../../context/AuthContext";
 import { ThemeContext } from "../../context/ThemeContext"; // Import the ThemeContext
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
-import { CiLight } from "react-icons/ci";
-import { MdOutlineDarkMode } from "react-icons/md";
+
+import { IoPersonCircleOutline } from "react-icons/io5";
+import { LiaSignOutAltSolid } from "react-icons/lia";
+import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 
 function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -34,7 +36,11 @@ function Header() {
   const { theme, toggleTheme } = useContext(ThemeContext); // Use ThemeContext
 
   return (
-    <header className={`header bg-${theme === "light" ? "white" : "gray-800"} shadow-sm`}>
+    <header
+      className={`header bg-${
+        theme === "light" ? "white" : "gray-800"
+      } shadow-sm`}
+    >
       <div className="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
         {/* Logo container */}
         <div className="flex-shrink-0">
@@ -60,9 +66,13 @@ function Header() {
           )}
           <button
             onClick={toggleTheme}
-            className="px-4 py-2 border rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600"
+            // className="px-4 py-2 border rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600"
           >
-           {theme === "light" ? (<CiLight className="text-2xl" />): (<MdOutlineDarkMode className="text-2xl" />)}
+            {theme === "light" ? (
+              <MdOutlineLightMode className="text-2xl text-gray-600 hover:text-blue-500" />
+            ) : (
+              <MdOutlineDarkMode className="text-2xl text-gray-600 hover:text-blue-500" />
+            )}
           </button>
           {currentUser ? (
             <div className="relative mt-1">
@@ -82,18 +92,24 @@ function Header() {
               </button>
               {/* Dropdown menu */}
               {showDropdown && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1">
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50">
                   <NavLink
                     to={`/profile/${currentUser?.displayName}`}
                     className="block px-4 py-2 hover:bg-gray-200 text-blue-600"
                   >
-                    Profile
+                    <div className="flex items-center space-x-2 gap-2">
+                      <IoPersonCircleOutline className="text-2xl" />
+                      Profile
+                    </div>
                   </NavLink>
                   <button
                     onClick={handleSignOut}
                     className="block px-4 py-2 text-red-500 hover:bg-gray-200 w-full text-left"
                   >
-                    Sign Out
+                    <div className="flex items-center space-x-2 gap-2">
+                      <LiaSignOutAltSolid className="text-2xl" />
+                      Sign Out
+                    </div>
                   </button>
                 </div>
               )}

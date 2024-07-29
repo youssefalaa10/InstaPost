@@ -52,14 +52,14 @@ body.dark .text-blue-500 {
 /* SocialPost */
 
 /* Apply light theme by default */
-body.light .social-post,
+/* body.light .social-post,
 body.light .comment,
 body.light .commentInput,
 body.light .commentPost,
 body.light .commentUsername {
   background-color: var(--light-bg-color);
   color: var(--light-text-color);
-}
+} */
 
 body.dark .social-post,
 body.dark .comment,
@@ -161,4 +161,20 @@ body.dark .text-gray-700 {
 
 body.dark .text-gray-400 {
     color: #a0aec0; /* Dark theme color */
+}
+body.light .friends,
+body.light .friends .bg-white {
+    background-color: var(--light-bg-color);
+    color: var(--light-text-color);
+}
+
+/* body.light input{
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--light-text-color); 
+} */
+body.dark input {
+ 
+    color: var(--light-text-color);
+  
 }

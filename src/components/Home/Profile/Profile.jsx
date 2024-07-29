@@ -4,6 +4,8 @@ import { useContext, useEffect, useState } from "react";
 import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "../../../firebase";
 import SocialPost from "../../SocialPost";
+import { MdEdit } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser } = useContext(AuthContext);
@@ -40,16 +42,24 @@ const Profile = () => {
       <div className="w-full max-w-5xl mx-auto bg-gray-100 p-4">
         <div className="relative">
           <img
-            src={getUserInfo.coverPhotoURL || "https://givenow.com.au/img/default-cover.png"}
+            src={
+              getUserInfo.coverPhotoURL ||
+              "https://givenow.com.au/img/default-cover.png"
+            }
             alt="Background"
             className="w-full h-64 object-cover rounded-lg"
           />
           <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
-            <img
-              src={currentUser.photoURL || "userName"}
-              alt="Avatar"
-              className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
-            />
+            <div className="relative">
+              <img
+                src={currentUser.photoURL || "userName"}
+                alt="Avatar"
+                className="w-32 h-32 rounded-full border-4 border-white shadow-xl"
+              />
+              <Link to="/editprofile" className="absolute bottom-0 right-0 p-2">
+                <MdEdit className="text-white bg-gray-600 rounded-full p-1 text-3xl" />
+              </Link>
+            </div>
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-md mt-4">
@@ -57,7 +67,7 @@ const Profile = () => {
             <h1 className="text-2xl font-bold">
               {currentUser.displayName || getUserInfo.name}
             </h1>
-            <p className="text-gray-600 mt-2">{getUserInfo.bio}</p>
+            <p className="text-gray-400 mt-2">{getUserInfo.bio}</p>
           </div>
           <div className="mt-4 border-t pt-4 flex flex-col md:flex-row">
             <div className="flex-1">
@@ -92,7 +102,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="mt-4">
-            <h2 className="text-xl font-bold mb-3" >My Posts</h2>
+            <h2 className="text-xl font-bold mb-3">My Posts</h2>
             {userPosts.map((post) => (
               <SocialPost key={post.id} post={post} />
             ))}

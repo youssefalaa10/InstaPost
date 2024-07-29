@@ -16,7 +16,9 @@ import EditPost from "./EditPost";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../styles/comment.css";
 import PostSkeleton from "./PostSkeleton";
-import "../styles/theme.css"
+import "../styles/theme.css";
+import { TbEditCircle } from "react-icons/tb";
+import { MdDelete } from "react-icons/md";
 const SocialPost = ({ post }) => {
   const { currentUser } = useContext(AuthContext);
   const [likes, setLikes] = useState([]);
@@ -106,8 +108,8 @@ const SocialPost = ({ post }) => {
   };
 
   return (
-    <div className="social-post p-4 border rounded-lg shadow-lg bg-white mb-4">
-      {loading ? (
+    <div className="social-post p-4 rounded-lg shadow-lg bg-white mb-4">
+    {loading ? (
         <PostSkeleton />
       ) : isEditing ? (
         <EditPost post={post} onClose={() => setIsEditing(false)} />
@@ -136,7 +138,10 @@ const SocialPost = ({ post }) => {
                   className="block px-4 py-2 hover:bg-gray-200 w-full text-left text-blue-600"
                   onClick={startEditing}
                 >
-                  Edit
+                  <div className="flex items-center space-x-2 gap-2">
+                    <TbEditCircle className="text-2xl" />
+                    Edit
+                  </div>
                 </button>
                 {currentUser?.uid === post.data.uid && (
                   <button
@@ -144,7 +149,10 @@ const SocialPost = ({ post }) => {
                     onClick={() => handleDelete(post.id)}
                     className="block px-4 py-2 text-red-500 hover:bg-gray-200 w-full text-left"
                   >
-                    Delete
+                    <div className="flex items-center space-x-2 gap-2">
+                      <MdDelete className="text-2xl" />
+                      Delete
+                    </div>
                   </button>
                 )}
               </div>

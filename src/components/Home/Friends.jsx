@@ -16,7 +16,7 @@ function Friends() {
   }, []);
 
   return (
-    <div className="friends p-4">
+    <div className=" p-4">
       <div className="p-4 bg-white rounded-lg shadow-md ">
         <span className="text-xl font-bold mb-4 block">Friends</span>
 
@@ -31,10 +31,10 @@ function Friends() {
               />
               <div className="flex flex-col">
                 <span className="font-semibold text-gray-700 capitalize">
-                  {user.data.userName}
+                  {user.data.displayName||user.data.userName}
                 </span>
                 <span className="text-sm text-gray-400">
-                  {user.data.email}
+                  {user.data.email||user.data.email||user.data.bio}
                 </span>
               </div>
             </div>

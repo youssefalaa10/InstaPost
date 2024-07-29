@@ -18,8 +18,8 @@ function SideBar() {
         />
 
         <div className="mb-5 flex flex-col items-center">
-          <span className="font-semibold text-gray-800">
-            {currentUser?.displayName || "Youssef"}
+          <span className="font-semibold ">
+            {currentUser?.displayName || "User"}
           </span>
           <span className="text-sm font-medium text-gray-700">
             {currentUser?.email || "Youssefalaa@gmail.com"}
@@ -29,7 +29,7 @@ function SideBar() {
         <hr className="w-full border-gray-300 mb-5" />
 
         <Link
-          to="/profile"
+          to={`/profile/${currentUser?.displayName}`}
           className="sidebar-link text-sm text-gray-700 p-3 rounded-lg flex justify-center items-center gap-3 hover:text-cyan-700"
         >
           My Profile

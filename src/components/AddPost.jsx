@@ -12,15 +12,18 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
-import { FaImages } from "react-icons/fa6";
+import { FaImages } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
+import { TbLoader3 } from "react-icons/tb"; // Import the loader icon
 import AddPostBtn from "./AddPostBtn";
+import "../styles/addpost.css"
 
 function AddPost() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [hasTag, setHasTag] = useState("");
   const [description, setDescription] = useState("");
   const [img, setImg] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { currentUser } = useContext(AuthContext);
 
   const handleInputClick = () => setIsPopupVisible(true);
@@ -32,6 +35,10 @@ function AddPost() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!currentUser) return;
+
+    setIsPopupVisible(false); // Close the popup immediately
+
     const postData = {
       uid: currentUser.uid,
       photoURL: currentUser.photoURL,
@@ -42,55 +49,67 @@ function AddPost() {
     };
 
     const postDocRef = await addDoc(collection(db, "posts"), postData);
-    await updateDoc(doc(db, "usersPosts", currentUser.uid), {
-      messages: arrayUnion({
-        ...postData,
-        id: uuid(),
-        timestamp: Timestamp.now(),
-      }),
-    });
 
     if (img) {
       const storageRef = ref(storage, `Posts/${uuid()}`);
       const uploadTask = uploadBytesResumable(storageRef, img);
 
+      setIsLoading(true);
+
       uploadTask.on(
         "state_changed",
         null,
-        (error) => console.error("Upload failed", error),
+        (error) => {
+          console.error("Upload failed", error);
+          setIsLoading(false); // Stop loading if there's an error
+        },
         async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          await updateDoc(postDocRef, { img: downloadURL });
-          await updateDoc(doc(db, "usersPosts", currentUser.uid), {
-            messages: arrayUnion({
-              ...postData,
-              id: uuid(),
-              img: downloadURL,
-              timestamp: Timestamp.now(),
-            }),
-          });
+          try {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+            await updateDoc(postDocRef, { img: downloadURL });
+
+            await updateDoc(doc(db, "users", currentUser.uid), {
+              posts: arrayUnion({
+                ...postData,
+                id: postDocRef.id,
+                img: downloadURL,
+                timestamp: Timestamp.now(),
+              }),
+            });
+
+            setDescription("");
+            setHasTag("");
+            setImg(null);
+            setIsLoading(false); // Stop loading when done
+          } catch (error) {
+            console.error("Error fetching download URL", error);
+            setIsLoading(false); // Stop loading if there's an error
+          }
         }
       );
+    } else {
+      await updateDoc(postDocRef, { img: null });
+
+      await updateDoc(doc(db, "users", currentUser.uid), {
+        posts: arrayUnion({
+          ...postData,
+          id: postDocRef.id,
+          img: null,
+          timestamp: Timestamp.now(),
+        }),
+      });
+
+      setDescription("");
+      setHasTag("");
+      setImg(null);
     }
-
-    setDescription("");
-    setHasTag("");
-    setImg(null);
-    setIsPopupVisible(false);
-  };
-
-  const handleKey = (e) => {
-    if (e.code === "Enter") handleSubmit(e);
-  };
-
-  const removeImage = () => {
-    setImg(null);
   };
 
   return (
     <div>
       {currentUser && (
-        <div className="w-full mt-1 mb-4 p-4 border rounded-lg shadow-sm bg-white">
+        <div className="w-full mt-1 mb-4 p-4 rounded-lg shadow-sm bg-white">
           <div className="flex items-center mb-4">
             <img
               className="w-10 h-10 rounded-full"
@@ -104,7 +123,6 @@ function AddPost() {
               onClick={handleInputClick}
             />
           </div>
-          {/* AddPostBtn component */}
           <div onClick={handleInputClick}>
             <AddPostBtn />
           </div>
@@ -136,7 +154,6 @@ function AddPost() {
                   placeholder="Enter description"
                   value={description}
                   onChange={handleDescriptionChange}
-                  onKeyDown={handleKey}
                 ></textarea>
               </div>
               <div className="mb-4">
@@ -174,7 +191,7 @@ function AddPost() {
                     <button
                       type="button"
                       className="mt-2 text-red-600 hover:text-red-800"
-                      onClick={removeImage}
+                      onClick={() => setImg(null)}
                     >
                       <ImCancelCircle size={24} />
                     </button>
@@ -185,12 +202,20 @@ function AddPost() {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded w-full "
+                  className="px-4 py-2 bg-blue-500 text-white rounded w-full"
                 >
                   Post
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-lg max-w-md w-full flex justify-center items-center">
+            <TbLoader3 className="animate-spin text-4xl text-blue-500" />
           </div>
         </div>
       )}

@@ -3,14 +3,9 @@ import { AuthContext } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { db, storage } from "../../../firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import {
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  updateEmail,
-  updateProfile,
-} from "firebase/auth";
+import { updateProfile } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { FaUpload } from "react-icons/fa6";
+import { FaUpload } from "react-icons/fa";
 import { v4 as uuid } from "uuid";
 import "../../../styles/profile.css";
 import { IoIosCamera } from "react-icons/io";
@@ -18,10 +13,10 @@ import { IoIosCamera } from "react-icons/io";
 const EditProfile = () => {
   const [img, setImg] = useState(null);
   const [coverImg, setCoverImg] = useState(null); // New state for cover image
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [data, setData] = useState({
     name: "",
-    newEmail: "",
+    email: "",
     bio: "",
     about: "",
     expertise: "",
@@ -39,8 +34,12 @@ const EditProfile = () => {
     e.preventDefault();
 
     // Convert expertise and fluentIn to arrays of strings
-    const expertiseArray = data.expertise.split(",").map((item) => item.trim());
-    const fluentInArray = data.fluentIn.split(",").map((item) => item.trim());
+    const expertiseArray = data.expertise
+      ? data.expertise.split(",").map((item) => item.trim())
+      : [];
+    const fluentInArray = data.fluentIn
+      ? data.fluentIn.split(",").map((item) => item.trim())
+      : [];
 
     // Function to upload an image and return its download URL
     const uploadImage = async (image) => {
@@ -48,9 +47,10 @@ const EditProfile = () => {
       const uploadTask = uploadBytesResumable(storageRef, image);
       return new Promise((resolve, reject) => {
         uploadTask.on(
+          "state_changed",
+          null,
           (error) => {
-            setError(true);
-            console.log(error);
+            setError("Error uploading image: " + error.message);
             reject(error);
           },
           () => {
@@ -63,48 +63,46 @@ const EditProfile = () => {
     let photoURL = currentUser.photoURL;
     let coverPhotoURL = currentUser.coverPhotoURL;
 
-    // Upload profile image if it exists
-    if (img) {
-      photoURL = await uploadImage(img);
-    }
-
-    // Upload cover image if it exists
-    if (coverImg) {
-      coverPhotoURL = await uploadImage(coverImg);
-    }
-
-    await updateProfile(currentUser, {
-      displayName: data.name,
-      photoURL: photoURL,
-      coverPhotoURL: coverPhotoURL,
-    });
-
-    await setDoc(doc(db, "users", currentUser.uid), {
-      uid: currentUser.uid,
-      photoURL: photoURL,
-      coverPhotoURL: coverPhotoURL,
-      displayName: data.name,
-      email: currentUser.email,
-      bio: data.bio,
-      about: data.about,
-      expertise: expertiseArray,
-      fluentIn: fluentInArray,
-      createdAt: serverTimestamp(),
-    });
-
-    const credential = EmailAuthProvider.credential(
-      currentUser.email,
-      data.oldPassword
-    );
-
-    await reauthenticateWithCredential(currentUser, credential).then(
-      async () => {
-        // User reauthenticated
-        await updateEmail(currentUser, data.newEmail);
+    try {
+      // Upload profile image if it exists
+      if (img) {
+        photoURL = await uploadImage(img);
       }
-    );
 
-    navigate("/");
+      // Upload cover image if it exists
+      if (coverImg) {
+        coverPhotoURL = await uploadImage(coverImg);
+      }
+
+      // Update profile with the new data if provided
+      await updateProfile(currentUser, {
+        displayName: data.name || currentUser.displayName,
+        photoURL: photoURL || currentUser.photoURL,
+        coverPhotoURL: coverPhotoURL || currentUser.coverPhotoURL,
+        email: data.email || currentUser.email,
+      });
+
+      // Update Firestore with new user data if provided
+      await setDoc(doc(db, "users", currentUser.uid), {
+        uid: currentUser.uid,
+        photoURL: photoURL || currentUser.photoURL,
+        coverPhotoURL: coverPhotoURL || currentUser.coverPhotoURL,
+        displayName: data.name || currentUser.displayName,
+        email: data.email || currentUser.email,
+        bio: data.bio || currentUser.bio,
+        about: data.about || currentUser.about,
+        expertise: expertiseArray.length
+          ? expertiseArray
+          : currentUser.expertise,
+        fluentIn: fluentInArray.length ? fluentInArray : currentUser.fluentIn,
+        createdAt: serverTimestamp(),
+      });
+      
+      navigate("/");
+    } catch (err) {
+      console.error("Error updating profile: ", err);
+      setError("Error updating profile: " + err.message);
+    }
   };
   console.log(error);
   return (
@@ -139,7 +137,9 @@ const EditProfile = () => {
               </div>
 
               <img
-                src={currentUser.photoURL}
+                src={
+                  currentUser.photoURL || "https://default-profile-img-url.com"
+                }
                 alt=""
                 className="profileUserImg"
               />
@@ -168,7 +168,7 @@ const EditProfile = () => {
                 <form onSubmit={handleUpdate}>
                   <div className="formInput">
                     <label htmlFor="file">
-                      Image: <FaUpload className="icon " />
+                      Image: <FaUpload className="icon" />
                     </label>
                     <input
                       type="file"
@@ -182,17 +182,7 @@ const EditProfile = () => {
                     <input
                       type="text"
                       name="name"
-                      placeholder="Jane Doe"
-                      onChange={handleChange}
-                    />
-                  </div>
-
-                  <div className="formInput">
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      name="newEmail"
-                      placeholder="jane_doe@gmail.com"
+                      placeholder="Your new Name"
                       onChange={handleChange}
                     />
                   </div>
@@ -201,7 +191,7 @@ const EditProfile = () => {
                     <input
                       type="text"
                       name="bio"
-                      placeholder="bio"
+                      placeholder="Bio"
                       onChange={handleChange}
                     />
                   </div>
@@ -209,7 +199,7 @@ const EditProfile = () => {
                     <label>About</label>
                     <input
                       type="text"
-                      placeholder="describe your self"
+                      placeholder="Describe yourself"
                       name="about"
                       onChange={handleChange}
                     />
@@ -228,7 +218,7 @@ const EditProfile = () => {
                     <input
                       type="text"
                       name="fluentIn"
-                      placeholder="Enter Your languages"
+                      placeholder="Enter your languages"
                       onChange={handleChange}
                     />
                   </div>
@@ -237,7 +227,7 @@ const EditProfile = () => {
                     <input
                       type="password"
                       name="oldPassword"
-                      placeholder="Enter Your Old Password"
+                      placeholder="Enter your old password"
                       onChange={handleChange}
                     />
                   </div>
