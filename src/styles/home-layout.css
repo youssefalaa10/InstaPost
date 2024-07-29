@@ -15,8 +15,8 @@
 
 .sidebar {
     grid-area: sidebar;
-    height: auto; /* Adjust height for small screens */
-    background-color: #f3f4f6; /* Ensure background matches */
+    height: auto;
+ 
 }
 
 .sidebar .sidebar-link:hover {
@@ -54,9 +54,7 @@
             "sidebar trending-topics"; /* Adjust layout for medium screens */
     }
 
-    .sidebar {
-        height: 100vh; /* Full height for medium screens */
-    }
+    
 
     .trending-topics {
         height: 100vh; /* Full height for medium screens */
@@ -73,9 +71,7 @@
             "sidebar main trending-topics"; /* Original layout for large screens */
     }
 
-    .sidebar {
-        height: 100vh; /* Full height for large screens */
-    }
+   
 
     .trending-topics {
         height: 100vh; /* Full height for large screens */

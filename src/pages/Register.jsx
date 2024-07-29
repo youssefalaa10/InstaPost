@@ -78,6 +78,17 @@ function RegisterPage({ onLoginClick }) {
   return (
     <div className="contain mx-auto">
       <div className="login-container">
+        <div className="login-welcome">
+          <h2>Welcome Back!</h2>
+          <p>
+            To keep connected with us, please login with your personal info.
+          </p>
+          <Link to={"/"}>
+          <button className="guest-button" >
+            Continue as Guest
+          </button>
+          </Link>
+        </div>
         <div className="login-form">
           <form onSubmit={handleSubmit}>
             <div className="flex items-center justify-between">
@@ -140,12 +151,6 @@ function RegisterPage({ onLoginClick }) {
             </p>
           </form>
           {error && <span>Something went wrong</span>}
-        </div>
-        <div className="login-welcome">
-          <h2>Welcome Back!</h2>
-          <p>
-            To keep connected with us, please login with your personal info.
-          </p>
         </div>
       </div>
     </div>

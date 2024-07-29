@@ -13,9 +13,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import EditPost from "./EditPost";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../styles/comment.css";
+import PostSkeleton from "./PostSkeleton";
 
 const SocialPost = ({ post }) => {
   const { currentUser } = useContext(AuthContext);
@@ -23,7 +23,6 @@ const SocialPost = ({ post }) => {
   const [liked, setLiked] = useState(false);
   const [input, setInput] = useState("");
   const [comments, setComments] = useState([]);
-  const [commentOpen, setCommentOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [commentBoxVisible, setCommentBoxVisible] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -110,7 +109,7 @@ const SocialPost = ({ post }) => {
   return (
     <div className="p-4 border rounded-lg shadow-lg bg-white mb-4">
       {loading ? (
-        <Skeleton height={100} />
+        <PostSkeleton />
       ) : isEditing ? (
         <EditPost post={post} onClose={() => setIsEditing(false)} />
       ) : (
@@ -127,12 +126,12 @@ const SocialPost = ({ post }) => {
                 {new Date(post.data?.timestamp?.toDate()).toLocaleString()}
               </span>
             </div>
-            {currentUser.uid == post.data.uid && (
-            <button className="ml-auto" onClick={toggleDropdown}>
-              <FaEllipsisV className="text-gray-500 ml-auto justify-end" />
-            </button>
-             )}
-            {currentUser.uid == post.data.uid && showDropdown && (
+            {currentUser?.uid == post.data.uid && (
+              <button className="ml-auto" onClick={toggleDropdown}>
+                <FaEllipsisV className="text-gray-500 ml-auto justify-end" />
+              </button>
+            )}
+            {currentUser?.uid == post.data.uid && showDropdown && (
               <div className="absolute right-80 mt-32 w-48 bg-white rounded-lg shadow-lg py-1 z-20">
                 <button
                   className="block px-4 py-2 hover:bg-gray-200 w-full text-left text-blue-600"
@@ -140,7 +139,7 @@ const SocialPost = ({ post }) => {
                 >
                   Edit
                 </button>
-                {currentUser.uid == post.data.uid && (
+                {currentUser?.uid == post.data.uid && (
                   <button
                     type="button"
                     onClick={() => handleDelete(post.id)}
@@ -157,11 +156,11 @@ const SocialPost = ({ post }) => {
           </span>
           <p className="text-gray-700 mb-4">{post.data.description}</p>
           {post.data.img && (
-           <div
-           className="w-full h-60 bg-cover bg-center rounded-lg mb-4"
-           style={{ backgroundImage: `url(${post.data.img})` }}
-           alt="post"
-         />
+            <div
+              className="w-full h-60 bg-cover bg-center rounded-lg mb-4"
+              style={{ backgroundImage: `url(${post.data.img})` }}
+              alt="post"
+            />
           )}
           <div className="flex items-center justify-between">
             <button
@@ -180,9 +179,8 @@ const SocialPost = ({ post }) => {
               onClick={() => setCommentBoxVisible((prev) => !prev)}
             >
               <FaRegComment />
-              <span onClick={() => setCommentOpen((prev) => !prev)}>
-                {comments.length}
-              </span>
+
+              {comments.length}
             </button>
           </div>
         </>
@@ -203,7 +201,7 @@ const SocialPost = ({ post }) => {
           </button>
         </form>
       )}
-      {commentOpen && (
+      {commentBoxVisible && (
         <div className="comment">
           {comments
             .sort((a, b) => b.data.timestamp - a.data.timestamp)

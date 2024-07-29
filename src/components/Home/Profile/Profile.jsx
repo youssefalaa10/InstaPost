@@ -1,5 +1,5 @@
-import Layout from "../layouts/Layout";
-import { AuthContext } from "../context/AuthContext";
+import Layout from "../../../layouts/Layout";
+import { AuthContext } from "../../../context/AuthContext";
 import { useContext } from "react";
 
 const Profile = () =>
@@ -60,7 +60,7 @@ const Profile = () =>
             />
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
               <img
-                src={profileData.avatar}
+                src={currentUser.photoURL || "userName"}
                 alt="Avatar"
                 className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
               />

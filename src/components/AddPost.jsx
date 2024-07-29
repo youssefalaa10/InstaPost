@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { FaImages } from "react-icons/fa6";
 import { ImCancelCircle } from "react-icons/im";
+import AddPostBtn from "./AddPostBtn";
 
 function AddPost() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -102,6 +103,10 @@ function AddPost() {
               className="ml-4 w-full p-2 rounded-full border bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onClick={handleInputClick}
             />
+          </div>
+          {/* AddPostBtn component */}
+          <div onClick={handleInputClick}>
+            <AddPostBtn />
           </div>
         </div>
       )}

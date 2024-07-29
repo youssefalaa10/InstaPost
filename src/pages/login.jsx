@@ -30,7 +30,7 @@ function LoginPage() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (error) {
       setError(true);
     }
@@ -44,6 +44,11 @@ function LoginPage() {
           <p>
             To keep connected with us, please login with your personal info.
           </p>
+          <Link to={"/"}>
+          <button className="guest-button" >
+            Continue as Guest
+          </button>
+          </Link>
         </div>
         <div className="login-form">
           {isLogin ? (

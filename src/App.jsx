@@ -3,7 +3,6 @@ import HomePage from "./pages/Home";
 import Layout from "./layouts/Layout";
 
 import Chats from "./pages/Chats.jsx";
-import Profile from "./components/Profile.jsx";
 
 import { updateCurrentUser } from "firebase/auth";
 import {
@@ -15,6 +14,8 @@ import LoginPage from "./pages/login.jsx";
 import RegisterPage from "./pages/Register.jsx";
 import SocialPost from "./components/SocialPost.jsx";
 import NotFounded from "./components/NotFounded.jsx";
+import Profile from "./components/Home/Profile/Profile.jsx";
+import EditProfile from "./components/Home/Profile/EditProfile.jsx";
 
 function App() {
   const AuthRoute = ({ children }) => {
@@ -28,11 +29,11 @@ function App() {
     {
       path: "/",
       element: (
-        <AuthRoute>
+        // <AuthRoute>
           <Layout>
             <HomePage />
           </Layout>
-        </AuthRoute>
+        // </AuthRoute>
       ),
     },
     {
@@ -57,6 +58,14 @@ function App() {
         <AuthRoute>
           <Profile />
         </AuthRoute>
+      ),
+    },
+    {
+      path: "/editprofile",
+      element: (
+        // <AuthRoute>
+          <EditProfile />
+        // </AuthRoute>
       ),
     },
     {

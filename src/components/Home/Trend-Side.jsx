@@ -1,6 +1,7 @@
 import { collection, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
+import { FaEllipsis } from "react-icons/fa6";
 
 function TrendingTopics() {
   const [hasTags, setHasTags] = useState([]);
@@ -25,14 +26,13 @@ function TrendingTopics() {
             className="trending-topic bg-gray-100 px-4 py-2 rounded mb-2 flex justify-between items-center hover:bg-gray-200 transition duration-300"
           >
             <div className="flex items-center">
-              <span className="text-gray-800 font-medium">#{hasTag}</span>
+              <span className="text-blue-500 font-medium">#{hasTag}</span>
               <span className="text-gray-600 text-sm ml-2">
                 {/* Assuming some static data for example */}
-                97.7 k
               </span>
             </div>
             <button className="text-blue-500 text-sm font-semibold hover:underline">
-              Follow
+              <FaEllipsis />
             </button>
           </div>
         ))}
