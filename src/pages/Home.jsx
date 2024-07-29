@@ -9,7 +9,7 @@ import { db } from "../firebase";
 import SocialPost from "../components/SocialPost";
 import { AuthContext } from "../context/AuthContext";
 import Friends from "../components/Home/Friends";
-
+import "../styles/theme.css"
 const HomePage = () => {
   const { currentUser } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);

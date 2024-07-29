@@ -1,153 +1,106 @@
 import Layout from "../../../layouts/Layout";
 import { AuthContext } from "../../../context/AuthContext";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
+import { db } from "../../../firebase";
+import SocialPost from "../../SocialPost";
 
-const Profile = () =>
-  // {
-  // name,
-  // bio,
-  // avatar,
-  // backgroundImage,
-  // socialLinks,
-  // stats,
-  // about,
-  // expertise,
-  // languages,
-  // karma,
-  // badges,
-  // }
-  {
-    const profileData = {
-      name: "Youssef Alaa",
-      bio: "Follow for daily design tips, memes, Flutter tips, 🔥 developer / co-founder ...",
-      avatar:
-        "https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1720742400&semt=ais_user",
-      backgroundImage: "https://t.ly/yBDQd",
-      socialLinks: [
-        { platform: "Twitter", url: "https://twitter.com/example" },
-        { platform: "LinkedIn", url: "https://linkedin.com/in/example" },
-        // more links
-      ],
-      stats: { followers: 3492, following: 3492 },
-      about: "Hi 👋, I'm Youssef - Cofounder & CEO working on InstaPost...",
+const Profile = () => {
+  const { currentUser } = useContext(AuthContext);
+  const [getUserInfo, setUserInfo] = useState({});
+  const [userPosts, setUserPosts] = useState([]);
 
-      skills: [
-        "Web development",
-        "UI/UX design",
-        "React/Flutter",
-        "App Development",
-      ],
+  useEffect(() => {
+    const unSub = onSnapshot(doc(db, "users", currentUser.uid), (doc) => {
+      setUserInfo(doc.data());
+    });
+    return () => unSub();
+  }, [currentUser.uid]);
 
-      languages: ["English", "Spanish", "French"],
-      karma: {
-        page: "https://github.com/youssefalaa10",
-        threads: 7216,
-        replies: 4812,
-        shows: 37,
-        invited: 260,
-      },
-    };
-    const { currentUser } = useContext(AuthContext);
+  useEffect(() => {
+    const postsQuery = query(
+      collection(db, "posts"),
+      where("uid", "==", currentUser.uid)
+    );
 
-    return (
-      <Layout>
-        <div className="w-full max-w-5xl mx-auto bg-gray-100 p-4">
-          <div className="relative">
+    const unSub = onSnapshot(postsQuery, (snapshot) => {
+      setUserPosts(
+        snapshot.docs.map((doc) => ({
+          id: doc.id,
+          data: doc.data(),
+        }))
+      );
+    });
+
+    return () => unSub();
+  }, [currentUser.uid]);
+
+  return (
+    <Layout>
+      <div className="w-full max-w-5xl mx-auto bg-gray-100 p-4">
+        <div className="relative">
+          <img
+            src={getUserInfo.coverPhotoURL || "https://givenow.com.au/img/default-cover.png"}
+            alt="Background"
+            className="w-full h-64 object-cover rounded-lg"
+          />
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
             <img
-              src={profileData.backgroundImage}
-              alt="Background"
-              className="w-full h-64 object-cover rounded-lg"
+              src={currentUser.photoURL || "userName"}
+              alt="Avatar"
+              className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
             />
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
-              <img
-                src={currentUser.photoURL || "userName"}
-                alt="Avatar"
-                className="w-32 h-32 rounded-full border-4 border-white shadow-lg"
-              />
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md mt-4">
-            <div className="text-center mt-16">
-              <h1 className="text-2xl font-bold">
-                {currentUser.displayName || profileData.name}
-              </h1>
-              <p className="text-gray-600 mt-2">{profileData.bio}</p>
-              <div className="flex justify-center space-x-2 mt-2">
-                {profileData.socialLinks.map((link, index) => (
-                  <a
-                    key={index}
-                    href={link.url}
-                    className="text-blue-500 hover:underline"
-                  >
-                    {link.platform}
-                  </a>
-                ))}
-              </div>
-              <div className="flex justify-center mt-4 space-x-4 gap-6 flex-wrap">
-                <div className="text-center">
-                  <span className="font-semibold text-lg">
-                    {profileData.stats.followers}
-                  </span>
-                  <br />
-                  Followers
-                </div>
-                <div className="text-center">
-                  <span className="font-semibold text-lg">
-                    {profileData.stats.following}
-                  </span>
-                  <br />
-                  Following
-                </div>
-                <div className="flex justify-center mt-2 space-x-2 gap-4">
-                  <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
-                    Follow
-                  </button>
-                  <button className="bg-gray-300 py-2 px-4 rounded-lg hover:bg-gray-400">
-                    Resume
-                  </button>
-                  <button className="bg-gray-300 py-2 px-4 rounded-lg hover:bg-gray-400">
-                    ...
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="mt-4 border-t pt-4 flex flex-col md:flex-row">
-              <div className="flex-1">
-                <h2 className="text-xl font-bold">About</h2>
-                <p className="mt-4 text-gray-700">{profileData.about}</p>
-                <div className="mt-4">
-                  <h3 className="font-semibold">Expertise</h3>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {profileData.skills.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="bg-gray-200 py-1 px-2 rounded-lg text-sm"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <h3 className="font-semibold">Fluent in</h3>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {profileData.languages.map((language, index) => (
-                      <span
-                        key={index}
-                        className="bg-gray-200 py-1 px-2 rounded-lg text-sm"
-                      >
-                        {language}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            
-            </div>
           </div>
         </div>
-      </Layout>
-    );
-  };
+        <div className="bg-white p-6 rounded-lg shadow-md mt-4">
+          <div className="text-center mt-16">
+            <h1 className="text-2xl font-bold">
+              {currentUser.displayName || getUserInfo.name}
+            </h1>
+            <p className="text-gray-600 mt-2">{getUserInfo.bio}</p>
+          </div>
+          <div className="mt-4 border-t pt-4 flex flex-col md:flex-row">
+            <div className="flex-1">
+              <h2 className="text-xl font-bold">About</h2>
+              <p className="mt-4 text-gray-700">{getUserInfo.about}</p>
+              <div className="mt-4">
+                <h3 className="font-semibold">Expertise</h3>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {getUserInfo.expertise?.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="bg-gray-200 py-1 px-2 rounded-lg text-sm"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="mt-4">
+                <h3 className="font-semibold">Fluent in</h3>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {getUserInfo.fluentIn?.map((language, index) => (
+                    <span
+                      key={index}
+                      className="bg-gray-200 py-1 px-2 rounded-lg text-sm"
+                    >
+                      {language}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-4">
+            <h2 className="text-xl font-bold mb-3" >My Posts</h2>
+            {userPosts.map((post) => (
+              <SocialPost key={post.id} post={post} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
+};
 
 export default Profile;

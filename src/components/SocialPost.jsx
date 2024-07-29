@@ -16,7 +16,7 @@ import EditPost from "./EditPost";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../styles/comment.css";
 import PostSkeleton from "./PostSkeleton";
-
+import "../styles/theme.css"
 const SocialPost = ({ post }) => {
   const { currentUser } = useContext(AuthContext);
   const [likes, setLikes] = useState([]);
@@ -99,7 +99,6 @@ const SocialPost = ({ post }) => {
     try {
       await deleteDoc(doc(db, "posts", postId));
       setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
-      // onClose();
     } catch (e) {
       console.log(e);
       console.log(posts);
@@ -107,7 +106,7 @@ const SocialPost = ({ post }) => {
   };
 
   return (
-    <div className="p-4 border rounded-lg shadow-lg bg-white mb-4">
+    <div className="social-post p-4 border rounded-lg shadow-lg bg-white mb-4">
       {loading ? (
         <PostSkeleton />
       ) : isEditing ? (
@@ -126,12 +125,12 @@ const SocialPost = ({ post }) => {
                 {new Date(post.data?.timestamp?.toDate()).toLocaleString()}
               </span>
             </div>
-            {currentUser?.uid == post.data.uid && (
+            {currentUser?.uid === post.data.uid && (
               <button className="ml-auto" onClick={toggleDropdown}>
                 <FaEllipsisV className="text-gray-500 ml-auto justify-end" />
               </button>
             )}
-            {currentUser?.uid == post.data.uid && showDropdown && (
+            {currentUser?.uid === post.data.uid && showDropdown && (
               <div className="absolute right-80 mt-32 w-48 bg-white rounded-lg shadow-lg py-1 z-20">
                 <button
                   className="block px-4 py-2 hover:bg-gray-200 w-full text-left text-blue-600"
@@ -139,7 +138,7 @@ const SocialPost = ({ post }) => {
                 >
                   Edit
                 </button>
-                {currentUser?.uid == post.data.uid && (
+                {currentUser?.uid === post.data.uid && (
                   <button
                     type="button"
                     onClick={() => handleDelete(post.id)}
@@ -179,7 +178,6 @@ const SocialPost = ({ post }) => {
               onClick={() => setCommentBoxVisible((prev) => !prev)}
             >
               <FaRegComment />
-
               {comments.length}
             </button>
           </div>

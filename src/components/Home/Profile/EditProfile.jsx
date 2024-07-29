@@ -10,19 +10,22 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
-import { FaImages, FaUpload } from "react-icons/fa6";
+import { FaUpload } from "react-icons/fa6";
 import { v4 as uuid } from "uuid";
 import "../../../styles/profile.css";
+import { IoIosCamera } from "react-icons/io";
+
 const EditProfile = () => {
   const [img, setImg] = useState(null);
+  const [coverImg, setCoverImg] = useState(null); // New state for cover image
   const [error, setError] = useState(false);
   const [data, setData] = useState({
     name: "",
     newEmail: "",
-    phone: "",
-    age: "",
-    country: "",
-    relationship: "",
+    bio: "",
+    about: "",
+    expertise: "",
+    fluentIn: "",
     oldPassword: "",
   });
   const { currentUser } = useContext(AuthContext);
@@ -35,80 +38,73 @@ const EditProfile = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
 
-    if (img) {
+    // Convert expertise and fluentIn to arrays of strings
+    const expertiseArray = data.expertise.split(",").map((item) => item.trim());
+    const fluentInArray = data.fluentIn.split(",").map((item) => item.trim());
+
+    // Function to upload an image and return its download URL
+    const uploadImage = async (image) => {
       const storageRef = ref(storage, "usersImages/" + uuid());
-      const uploadTask = uploadBytesResumable(storageRef, img);
-
-      uploadTask.on(
-        (error) => {
-          setError(true);
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            await updateProfile(currentUser, {
-              displayName: data.name,
-              email: data.newEmail,
-              photoURL: downloadURL,
-            });
-
-            await setDoc(doc(db, "users", currentUser.uid), {
-              uid: currentUser.uid,
-              photoURL: downloadURL,
-              displayName: data.name,
-              email: data.newEmail,
-              phone: data.phone,
-              age: data.age,
-              country: data.country,
-              relationship: data.relationship,
-              createdAt: serverTimestamp(),
-            });
-
-            const credential = EmailAuthProvider.credential(
-              currentUser.email,
-              data.oldPassword
-            );
-
-            await reauthenticateWithCredential(currentUser, credential).then(
-              async () => {
-                //User reauthenticate
-                await updateEmail(currentUser, data.newEmail);
-              }
-            );
-          });
-        }
-      );
-    } else {
-      await updateProfile(currentUser, {
-        displayName: data.name,
-        email: data.newEmail,
+      const uploadTask = uploadBytesResumable(storageRef, image);
+      return new Promise((resolve, reject) => {
+        uploadTask.on(
+          (error) => {
+            setError(true);
+            console.log(error);
+            reject(error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(resolve).catch(reject);
+          }
+        );
       });
+    };
 
-      await setDoc(doc(db, "users", currentUser.uid), {
-        uid: currentUser.uid,
+    let photoURL = currentUser.photoURL;
+    let coverPhotoURL = currentUser.coverPhotoURL;
 
-        displayName: data.name,
-        email: data.newEmail,
-        phone: data.phone,
-        age: data.age,
-        country: data.country,
-        relationship: data.relationship,
-        createdAt: serverTimestamp(),
-      });
-
-      const credential = EmailAuthProvider.credential(
-        currentUser.email,
-        data.oldPassword
-      );
-
-      await reauthenticateWithCredential(currentUser, credential).then(
-        async () => {
-          //User reauthenticate
-          await updateEmail(currentUser, data.newEmail);
-        }
-      );
+    // Upload profile image if it exists
+    if (img) {
+      photoURL = await uploadImage(img);
     }
-    navigate("/login");
+
+    // Upload cover image if it exists
+    if (coverImg) {
+      coverPhotoURL = await uploadImage(coverImg);
+    }
+
+    await updateProfile(currentUser, {
+      displayName: data.name,
+      photoURL: photoURL,
+      coverPhotoURL: coverPhotoURL,
+    });
+
+    await setDoc(doc(db, "users", currentUser.uid), {
+      uid: currentUser.uid,
+      photoURL: photoURL,
+      coverPhotoURL: coverPhotoURL,
+      displayName: data.name,
+      email: currentUser.email,
+      bio: data.bio,
+      about: data.about,
+      expertise: expertiseArray,
+      fluentIn: fluentInArray,
+      createdAt: serverTimestamp(),
+    });
+
+    const credential = EmailAuthProvider.credential(
+      currentUser.email,
+      data.oldPassword
+    );
+
+    await reauthenticateWithCredential(currentUser, credential).then(
+      async () => {
+        // User reauthenticated
+        await updateEmail(currentUser, data.newEmail);
+      }
+    );
+
+    navigate("/");
   };
   console.log(error);
   return (
@@ -118,10 +114,30 @@ const EditProfile = () => {
           <div className="profileRightTop">
             <div className="profileCover">
               <img
-                src="/assets/profileCover/profilecover.jpg"
+                src={
+                  coverImg
+                    ? URL.createObjectURL(coverImg)
+                    : "https://givenow.com.au/img/default-cover.png"
+                }
                 alt=""
                 className="profileCoverImg"
               />
+              <div className="flex absolute bottom-20 left-20 bg-slate-100 rounded-md">
+                <label
+                  htmlFor="coverFile"
+                  className="flex items-center space-x-2 p-2 cursor-pointer"
+                >
+                  <IoIosCamera className="icon text-lg" />
+                  <span>Edit Cover Photo</span>
+                </label>
+                <input
+                  type="file"
+                  id="coverFile"
+                  style={{ display: "none" }}
+                  onChange={(e) => setCoverImg(e.target.files[0])}
+                />
+              </div>
+
               <img
                 src={currentUser.photoURL}
                 alt=""
@@ -143,7 +159,7 @@ const EditProfile = () => {
                   src={
                     img
                       ? URL.createObjectURL(img)
-                      : "/assets/profileCover/DefaultProfile.jpg"
+                      : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmhhs0F4iQ6BXiXB7DhqCKUhND_YbbUR_CdA&s"
                   }
                   alt=""
                 />
@@ -160,25 +176,6 @@ const EditProfile = () => {
                       style={{ display: "none" }}
                       onChange={(e) => setImg(e.target.files[0])}
                     />
-                    <label
-                      htmlFor="imageFile"
-                      className="flex flex-col items-center justify-center   border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 border-gray-300"
-                    >
-                      {img ? (
-                        <img
-                          src={URL.createObjectURL(img)}
-                          alt="Selected"
-                          className=" object-contain"
-                        />
-                      ) : (
-                        <>
-                          <FaImages className="w-10 h-10 text-gray-400" />
-                          <p className="text-sm text-gray-500">
-                            Click to upload or drag and drop
-                          </p>
-                        </>
-                      )}
-                    </label>
                   </div>
                   <div className="formInput">
                     <label>Name</label>
@@ -200,38 +197,38 @@ const EditProfile = () => {
                     />
                   </div>
                   <div className="formInput">
-                    <label>Phone</label>
+                    <label>Bio</label>
                     <input
                       type="text"
-                      name="phone"
-                      placeholder="+4 123 456 789"
+                      name="bio"
+                      placeholder="bio"
                       onChange={handleChange}
                     />
                   </div>
                   <div className="formInput">
-                    <label>Age</label>
+                    <label>About</label>
                     <input
                       type="text"
-                      placeholder="Enter Your Age"
-                      name="age"
+                      placeholder="describe your self"
+                      name="about"
                       onChange={handleChange}
                     />
                   </div>
                   <div className="formInput">
-                    <label>Country</label>
+                    <label>Expertise</label>
                     <input
                       type="text"
-                      name="country"
-                      placeholder="United Kingdom"
+                      name="expertise"
+                      placeholder="Web development, UI/UX design, React/Flutter"
                       onChange={handleChange}
                     />
                   </div>
                   <div className="formInput">
-                    <label>Relationship</label>
+                    <label>Fluent In</label>
                     <input
                       type="text"
-                      name="relationship"
-                      placeholder="Enter Your Status"
+                      name="fluentIn"
+                      placeholder="Enter Your languages"
                       onChange={handleChange}
                     />
                   </div>

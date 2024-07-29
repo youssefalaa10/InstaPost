@@ -1,0 +1,164 @@
+/* Define theme variables */
+:root {
+    --light-bg-color: #ffffff;
+    --dark-bg-color: #424F55;
+    --light-text-color: #000000;
+    --dark-text-color: #ffffff;
+}
+
+/* Apply light theme by default */
+body.light .trending-topics,
+body.light .trending-topic {
+    background-color: var(--light-bg-color);
+    color: var(--light-text-color);
+}
+
+body.dark .trending-topics,
+body.dark .trending-topic {
+    background-color: var(--dark-bg-color);
+    color: var(--dark-text-color);
+}
+
+.trending-topic {
+    background-color: var(--light-bg-color); /* Default light mode background */
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+body.dark .trending-topic {
+    background-color: #333; /* Dark mode background for each topic */
+}
+
+.trending-topic:hover {
+    background-color: var(--light-bg-color);
+}
+
+body.dark .trending-topic:hover {
+    background-color: #555; /* Dark mode hover effect */
+}
+
+.text-blue-500 {
+    color: #3b82f6; /* Light theme color */
+}
+
+body.dark .text-blue-500 {
+    color: #93c5fd; /* Dark theme color */
+}
+/* SocialPost */
+
+/* Apply light theme by default */
+body.light .social-post,
+body.light .comment,
+body.light .commentInput,
+body.light .commentPost,
+body.light .commentUsername {
+  background-color: var(--light-bg-color);
+  color: var(--light-text-color);
+}
+
+body.dark .social-post,
+body.dark .comment,
+body.dark .commentInput,
+body.dark .commentPost,
+body.dark .commentUsername {
+  background-color: var(--dark-bg-color);
+  color: var(--dark-text-color);
+}
+
+/* Other specific styles */
+.social-post {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  background-color: #011631;
+}
+
+/* Adjust the background color for comment input and posts in dark mode */
+.commentInput,
+.commentPost {
+  background-color: var(--dark-bg-color);
+  color: var(--dark-text-color);
+  border: 1px solid #333;
+}
+
+.commentPost {
+  background-color: var(--dark-bg-color);
+  color: var(--dark-text-color);
+}
+
+/* Ensure text color and other elements are updated correctly */
+.commentUsername {
+  color: var(--light-text-color);
+  /* or use a specific color if needed */
+}
+
+/* HomeLayout */
+/* Apply light theme by default */
+/* body.light .home-layout,
+body.light .main,
+body.light .sidebar,
+body.light .trending-topics {
+    background-color: var(--light-bg-color);
+    color: var(--light-text-color);
+} */
+
+/* Apply dark theme */
+body.dark .home-layout,
+body.dark .main,
+body.dark .sidebar,
+body.dark .trending-topics {
+    background-color: var(--dark-bg-color);
+    color: var(--dark-text-color);
+}
+
+/* friends */
+/* Apply light theme by default */
+body.light .friends,
+body.light .friends .bg-white {
+    background-color: var(--light-bg-color);
+    color: var(--light-text-color);
+}
+
+body.dark .friends,
+body.dark .friends .bg-white {
+    background-color: var(--dark-bg-color);
+    color: var(--dark-text-color);
+}
+
+.friends {
+    background-color: var(--light-bg-color); /* Default light mode background */
+}
+
+body.dark .friends {
+    background-color: var(--dark-bg-color); /* Dark mode background */
+}
+
+.bg-white {
+    background-color: var(--light-bg-color); /* Default light mode background */
+}
+
+body.dark .bg-white {
+    background-color: #333; /* Dark mode background for inner content */
+}
+
+.text-gray-700 {
+    color: #4a5568; /* Light theme color */
+}
+
+body.dark .text-gray-700 {
+    color: #e2e8f0; /* Dark theme color */
+}
+
+.text-gray-400 {
+    color: #cbd5e0; /* Light theme color */
+}
+
+body.dark .text-gray-400 {
+    color: #a0aec0; /* Dark theme color */
+}

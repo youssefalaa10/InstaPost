@@ -5,8 +5,11 @@ import { FiBell } from "react-icons/fi";
 import { FaSignInAlt, FaUserPlus } from "react-icons/fa";
 import { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { ThemeContext } from "../../context/ThemeContext"; // Import the ThemeContext
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
+import { CiLight } from "react-icons/ci";
+import { MdOutlineDarkMode } from "react-icons/md";
 
 function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -28,9 +31,10 @@ function Header() {
   };
 
   const { currentUser } = useContext(AuthContext);
+  const { theme, toggleTheme } = useContext(ThemeContext); // Use ThemeContext
 
   return (
-    <header className="header bg-white shadow-sm">
+    <header className={`header bg-${theme === "light" ? "white" : "gray-800"} shadow-sm`}>
       <div className="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
         {/* Logo container */}
         <div className="flex-shrink-0">
@@ -54,6 +58,12 @@ function Header() {
               </NavLink>
             </>
           )}
+          <button
+            onClick={toggleTheme}
+            className="px-4 py-2 border rounded-md text-sm font-medium text-white bg-blue-500 hover:bg-blue-600"
+          >
+           {theme === "light" ? (<CiLight className="text-2xl" />): (<MdOutlineDarkMode className="text-2xl" />)}
+          </button>
           {currentUser ? (
             <div className="relative mt-1">
               <button

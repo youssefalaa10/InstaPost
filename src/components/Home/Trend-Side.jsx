@@ -2,7 +2,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { FaEllipsis } from "react-icons/fa6";
-
+import "../../styles/theme.css"
 function TrendingTopics() {
   const [hasTags, setHasTags] = useState([]);
   useEffect(() => {

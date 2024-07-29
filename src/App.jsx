@@ -1,9 +1,7 @@
+
 import HomePage from "./pages/Home";
-
 import Layout from "./layouts/Layout";
-
 import Chats from "./pages/Chats.jsx";
-
 import { updateCurrentUser } from "firebase/auth";
 import {
   createBrowserRouter,
@@ -16,6 +14,7 @@ import SocialPost from "./components/SocialPost.jsx";
 import NotFounded from "./components/NotFounded.jsx";
 import Profile from "./components/Home/Profile/Profile.jsx";
 import EditProfile from "./components/Home/Profile/EditProfile.jsx";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
 
 function App() {
   const AuthRoute = ({ children }) => {
@@ -29,11 +28,9 @@ function App() {
     {
       path: "/",
       element: (
-        // <AuthRoute>
-          <Layout>
-            <HomePage />
-          </Layout>
-        // </AuthRoute>
+        <Layout>
+          <HomePage />
+        </Layout>
       ),
     },
     {
@@ -64,7 +61,7 @@ function App() {
       path: "/editprofile",
       element: (
         // <AuthRoute>
-          <EditProfile />
+        <EditProfile />
         // </AuthRoute>
       ),
     },
@@ -75,9 +72,9 @@ function App() {
   ]);
 
   return (
-    <>
+    <ThemeProvider> {/* Wrap with ThemeProvider */}
       <RouterProvider router={router} />
-    </>
+    </ThemeProvider>
   );
 }
 

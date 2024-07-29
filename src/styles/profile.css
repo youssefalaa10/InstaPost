@@ -27,7 +27,7 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    top: 150px;
+    top: 109px;
     left: 50%;
     transform: translateX(-50%);
     object-fit: cover;
@@ -81,14 +81,19 @@
 }
 
 .left {
+    position: relative;
     flex: 1;
 }
 
 .left img {
+    position: absolute;
+    left: 42px;
+    top: 79px;
     width: 200px;
     height: 200px;
     border-radius: 50%;
     object-fit: cover;
+    
 }
 
 .right {
