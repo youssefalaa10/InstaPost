@@ -2,6 +2,7 @@ import { FaEllipsisV, FaRegComment } from "react-icons/fa";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { AuthContext } from "../context/AuthContext";
 import { useContext, useEffect, useState } from "react";
+import {  useNavigate } from "react-router-dom";
 import {
   addDoc,
   collection,
@@ -19,6 +20,7 @@ import PostSkeleton from "./PostSkeleton";
 import "../styles/theme.css";
 import { TbEditCircle } from "react-icons/tb";
 import { MdDelete } from "react-icons/md";
+
 const SocialPost = ({ post }) => {
   const { currentUser } = useContext(AuthContext);
   const [likes, setLikes] = useState([]);
@@ -30,6 +32,7 @@ const SocialPost = ({ post }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unSub = onSnapshot(
@@ -48,12 +51,16 @@ const SocialPost = ({ post }) => {
   }, [likes, currentUser?.uid]);
 
   const likePost = async () => {
-    if (liked) {
-      await deleteDoc(doc(db, "posts", post.id, "likes", currentUser.uid));
+    if (currentUser) {
+      if (liked) {
+        await deleteDoc(doc(db, "posts", post.id, "likes", currentUser.uid));
+      } else {
+        await setDoc(doc(db, "posts", post.id, "likes", currentUser.uid), {
+          userId: currentUser.uid,
+        });
+      }
     } else {
-      await setDoc(doc(db, "posts", post.id, "likes", currentUser.uid), {
-        userId: currentUser.uid,
-      });
+       navigate("/login");
     }
   };
 
@@ -109,54 +116,58 @@ const SocialPost = ({ post }) => {
 
   return (
     <div className="social-post p-4 rounded-lg shadow-lg bg-white mb-4">
-    {loading ? (
+      {loading ? (
         <PostSkeleton />
       ) : isEditing ? (
         <EditPost post={post} onClose={() => setIsEditing(false)} />
       ) : (
         <>
-          <div className="flex items-center mb-4">
-            <img
-              src={post.data.photoURL}
-              alt="avatar"
-              className="w-10 h-10 rounded-full mr-2"
-            />
-            <div className="flex flex-col">
-              <span className="font-semibold">{post.data.userName}</span>
-              <span className="text-gray-500 text-sm">
-                {new Date(post.data?.timestamp?.toDate()).toLocaleString()}
-              </span>
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-start items-center gap-3">
+              <img
+                src={post.data.photoURL}
+                alt="avatar"
+                className="w-10 h-10 rounded-full mr-2"
+              />
+              <div className="flex flex-col">
+                <span className="font-semibold">{post.data.userName}</span>
+                <span className="text-gray-500 text-sm">
+                  {new Date(post.data?.timestamp?.toDate()).toLocaleString()}
+                </span>
+              </div>
             </div>
-            {currentUser?.uid === post.data.uid && (
-              <button className="ml-auto" onClick={toggleDropdown}>
-                <FaEllipsisV className="text-gray-500 ml-auto justify-end" />
-              </button>
-            )}
-            {currentUser?.uid === post.data.uid && showDropdown && (
-              <div className="absolute right-80 mt-32 w-48 bg-white rounded-lg shadow-lg py-1 z-20">
-                <button
-                  className="block px-4 py-2 hover:bg-gray-200 w-full text-left text-blue-600"
-                  onClick={startEditing}
-                >
-                  <div className="flex items-center space-x-2 gap-2">
-                    <TbEditCircle className="text-2xl" />
-                    Edit
-                  </div>
+            <div className="relative ">
+              {currentUser?.uid === post.data.uid && (
+                <button className="ml-auto" onClick={toggleDropdown}>
+                  <FaEllipsisV className="text-gray-500 ml-auto justify-end" />
                 </button>
-                {currentUser?.uid === post.data.uid && (
+              )}
+              {currentUser?.uid === post.data.uid && showDropdown && (
+                <div className="absolute w-52 right-full bg-white rounded-lg shadow-lg py-1 z-20">
                   <button
-                    type="button"
-                    onClick={() => handleDelete(post.id)}
-                    className="block px-4 py-2 text-red-500 hover:bg-gray-200 w-full text-left"
+                    className="block px-4 py-2 hover:bg-gray-200 w-full text-left text-blue-600"
+                    onClick={startEditing}
                   >
                     <div className="flex items-center space-x-2 gap-2">
-                      <MdDelete className="text-2xl" />
-                      Delete
+                      <TbEditCircle className="text-2xl" />
+                      Edit
                     </div>
                   </button>
-                )}
-              </div>
-            )}
+                  {currentUser?.uid === post.data.uid && (
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(post.id)}
+                      className="block px-4 py-2 text-red-500 hover:bg-gray-200 w-full text-left"
+                    >
+                      <div className="flex items-center space-x-2 gap-2">
+                        <MdDelete className="text-2xl" />
+                        Delete
+                      </div>
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
           <span className="text-blue-400 text-sm inline-block">
             #{post.data.hasTag}
