@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import logo from "../../assets/images/logo2.png";
+import logo from "/assets/images/logo2.png";
 import { HiOutlineMail } from "react-icons/hi";
 import { FiBell } from "react-icons/fi";
 import { FaSignInAlt, FaUserPlus } from "react-icons/fa";

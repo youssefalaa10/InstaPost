@@ -3,13 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { auth, db, storage } from "../firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { TbLoader3 } from "react-icons/tb";
 
 import "../styles/login.css";
-import { doc, setDoc } from "firebase/firestore";
 
 function RegisterPage({ onLoginClick }) {
   const [img, setImg] = useState(null);
   const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [form, setForm] = useState({
     username: "",
@@ -26,57 +28,85 @@ function RegisterPage({ onLoginClick }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setIsLoading(true); // Start loading
     const userName = e.target[1].value;
     const email = e.target[2].value;
     const password = e.target[3].value;
+    const defaultImageURL =
+      "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg";
+
     try {
       const result = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      const storageRef = ref(storage, "usersImages/" + userName);
 
-      const uploadTask = uploadBytesResumable(storageRef, img);
+      if (img) {
+        const storageRef = ref(storage, "usersImages/" + userName);
+        const uploadTask = uploadBytesResumable(storageRef, img);
 
-      uploadTask.on(
-        "state_changed",
-        null,
-        (error) => {
-          // Handle unsuccessful uploads
-          setError(true);
-          console.error("Upload failed", error);
-        },
-        async () => {
-          try {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            await updateProfile(result.user, {
-              displayName: userName, // Changed to displayName
-              photoURL: downloadURL,
-            });
-            await setDoc(doc(db, "users", result.user.uid), {
-              // Ensure collection name 'users' is used
-              uid: result.user.uid,
-              userName,
-              email,
-              photoURL: downloadURL,
-            });
-            await setDoc(doc(db, "usersPosts", result.user.uid), {
-              messages: [],
-            });
-          } catch (error) {
+        uploadTask.on(
+          "state_changed",
+          null,
+          (error) => {
             setError(true);
+            console.error("Upload failed", error);
+            setIsLoading(false); // End loading on error
+          },
+          async () => {
+            try {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              await updateProfile(result.user, {
+                displayName: userName,
+                photoURL: downloadURL,
+              });
+              await setDoc(doc(db, "users", result.user.uid), {
+                uid: result.user.uid,
+                userName,
+                email,
+                photoURL: downloadURL,
+              });
+              await setDoc(doc(db, "usersPosts", result.user.uid), {
+                messages: [],
+              });
+              setIsLoading(false); // End loading
+            } catch (error) {
+              setError(true);
+              setIsLoading(false); // End loading on error
+            }
           }
-        }
-      );
+        );
+      } else {
+        await updateProfile(result.user, {
+          displayName: userName,
+          photoURL: defaultImageURL,
+        });
+        await setDoc(doc(db, "users", result.user.uid), {
+          uid: result.user.uid,
+          userName,
+          email,
+          photoURL: defaultImageURL,
+        });
+        await setDoc(doc(db, "usersPosts", result.user.uid), {
+          messages: [],
+        });
+        setIsLoading(false); // End loading
+      }
     } catch (error) {
       setError(true);
+      setIsLoading(false); // End loading on error
     }
-    navigate("/login");
+    navigate("/");
   }
 
   return (
     <div className="contain mx-auto">
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-opacity-50">
+          <TbLoader3 className="animate-spin text-4xl text-blue-500" />
+        </div>
+      )}
       <div className="login-container">
         <div className="login-welcome">
           <h2>Welcome Back!</h2>
@@ -84,9 +114,7 @@ function RegisterPage({ onLoginClick }) {
             To keep connected with us, please login with your personal info.
           </p>
           <Link to={"/"}>
-          <button className="guest-button" >
-            Continue as Guest
-          </button>
+            <button className="guest-button">Continue as Guest</button>
           </Link>
         </div>
         <div className="login-form">
@@ -100,7 +128,7 @@ function RegisterPage({ onLoginClick }) {
                     src={
                       img
                         ? URL.createObjectURL(img)
-                        : "src/assets/images/profile.jpg"
+                        : "https://static.vecteezy.com/system/resources/previews/036/280/650/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg"
                     }
                     alt="profile"
                   />

@@ -1,5 +1,5 @@
 .error-page{
-    background-image: url("../assets/images/404.png");
+    background-image: url("public\assets\images\404.png");
     width: 800px;
     height: 600px;
     background-repeat: no-repeat;
