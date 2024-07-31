@@ -102,6 +102,13 @@ body {
   text-decoration: none;
 }
 
+
+.login-form .error {
+  color: #e53e3e;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
 .login-welcome {
   position: relative;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
